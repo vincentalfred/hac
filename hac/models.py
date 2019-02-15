@@ -18,7 +18,7 @@ class Certification (models.Model):
 	machine_type = models.ForeignKey(Machine_type, on_delete=models.CASCADE)
 
 class Machine (models.Model):
-	machine_type = models.ForeignKey(Machine_type,on_delete=models.CASCADE)
+	machine_type = models.ForeignKey(Machine_type, on_delete=models.CASCADE)
 	machine_name = models.CharField(max_length=200)
 
 class Tap (models.Model):
@@ -28,9 +28,9 @@ class Tap (models.Model):
 	power_usage = models.IntegerField(null=True, blank=True)
 
 class Usage (models.Model):
-	user_id = models.IntegerField()
-	machine_id = models.IntegerField()
-	machine_type_id = models.IntegerField()
+	user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+	machine_type = models.ForeignKey(Machine_type, on_delete=models.DO_NOTHING)
+	machine = models.ForeignKey(Machine, on_delete=models.DO_NOTHING)
 	start_time = models.DateTimeField()
 	end_time = models.DateTimeField()
 	total_usage = models.IntegerField()
