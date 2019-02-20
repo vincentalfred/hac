@@ -77,7 +77,7 @@ if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r
 fi
 
-export SECRET_KEY="^pc$a8qgma_&z6r7w8^25u$ea5&l%@a=5m7v7e4obeqxlg_#h$"
+export SECRET_KEY="^pc$a8qgma_&z6r7w8^25u$ea5&l%@a=5m7v7e4obeqxlg_#g$"
 export DEBUG="False"
 
 export DB_HOST="/cloudsql/hac-webapp:asia-southeast1:hacwebapp"
