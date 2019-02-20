@@ -98,7 +98,7 @@ if os.getenv('GAE_APPLICATION', None):
 			# 'PORT': os.environ['DB_PORT'],
 			'NAME': os.environ['DB_NAME'],
 			'USER': os.environ['DB_USER'],
-			'PASSWORD': os.environ['DB_PASSWORD']
+			'PASSWORD': os.environ['DB_PASSWORD'],
         }
     }
 else:
@@ -125,7 +125,8 @@ else:
 			# 'PORT': os.environ['DB_PORT'],
 			'NAME': os.environ['DB_NAME'],
 			'USER': os.environ['DB_USER'],
-			'PASSWORD': os.environ['DB_PASSWORD']
+            'PASSWORD': os.environ['DB_USER'],
+			# 'PASSWORD': os.environ['DB_PASSWORD'],
         }
     }
 
@@ -178,4 +179,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = os.environ['STATIC_URL']
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.environ['STATIC_ROOT']
