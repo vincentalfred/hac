@@ -20,11 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
-# SECRET_KEY = '^pc$a8qgma_&z6r7w8^25u$ea5&l%@a=5m7v7e4obeqxlg_#g$'
+if os.getenv('GAE_APPLICATION', None):
+	SECRET_KEY = os.environ['SECRET_KEY']
+else:
+	SECRET_KEY = 'keep it secret'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DEBUG'] == 'True'
+DEBUG = 'True'
 
 ALLOWED_HOSTS = [
 	'127.0.0.1', 
@@ -49,7 +51,7 @@ PROJECT_APPS = [
     'apps.certifications',
     'apps.machines',
     'apps.usages',
-
+    'apps.taps',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS
@@ -108,38 +110,16 @@ else:
     #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
     #
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.mysql',
-    #         'HOST': '127.0.0.1',
-    #         'PORT': '3306',
-    #         'NAME': 'hac',
-    #         'USER': 'root',
-    #         'PASSWORD': 'root',
-    #     }
-    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-			'HOST': '127.0.0.1',
-			# 'PORT': os.environ['DB_PORT'],
-			'NAME': os.environ['DB_NAME'],
-			'USER': os.environ['DB_USER'],
-            'PASSWORD': os.environ['DB_USER'],
-			# 'PASSWORD': os.environ['DB_PASSWORD'],
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+            'NAME': 'hac',
+            'USER': 'root',
+            'PASSWORD': 'root',
         }
     }
-
-# DATABASES = {
-#     'default': {
-#       'ENGINE': 'django.db.backends.mysql',
-#       'HOST': os.environ['DB_HOST'],
-#       'PORT': os.environ['DB_PORT'],
-#       'NAME': os.environ['DB_NAME'],
-#       'USER': os.environ['DB_USER'],
-#       'PASSWORD': os.environ['DB_PASSWORD']
-#     }
-# }
 
 
 # Password validation
@@ -177,6 +157,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
-STATIC_URL = os.environ['STATIC_URL']
-STATIC_ROOT = os.environ['STATIC_ROOT']
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
+# STATIC_URL = os.environ['STATIC_URL']
+# STATIC_ROOT = os.environ['STATIC_ROOT']
