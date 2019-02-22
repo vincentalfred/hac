@@ -20,7 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^pc$a8qgma_&z6r7w8^25u$ea5&l%@a=5m7v7e4obeqxlg_#g$'
+if os.getenv('GAE_APPLICATION', None):
+	SECRET_KEY = os.environ['SECRET_KEY']
+else:
+	SECRET_KEY = 'keep it secret'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'True'
@@ -48,7 +51,7 @@ PROJECT_APPS = [
     'apps.certifications',
     'apps.machines',
     'apps.usages',
-
+    'apps.taps',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS

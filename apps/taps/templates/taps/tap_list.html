@@ -1,0 +1,13 @@
+{% if latest_tap_list %}
+	<ul>
+		{% for tap in latest_tap_list %}
+			<li>tap_id: {{ tap.id }}</li>
+			<li>card_uid: {{ tap.card_uid }}</li>
+			<li>machine: {{ tap.machine }}</li>
+			<li>tap_time: {{ tap.tap_time }}</li>
+			<li>power_usage: {{ tap.power_usage }}</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>No taps are available.as</p>
+{% endif %}
