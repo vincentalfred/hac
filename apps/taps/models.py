@@ -8,4 +8,4 @@ class Tap (models.Model):
 	power_usage = models.IntegerField(null=True, blank=True)
 
 	def __str__(self):
-		return self.card_uid
+		return self.card_uid + self.machine.id
