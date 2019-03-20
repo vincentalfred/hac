@@ -10,4 +10,3 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return Tap.objects.order_by('-tap_time')
-
