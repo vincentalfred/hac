@@ -11,15 +11,3 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return Tap.objects.order_by('-tap_time')
-
-def esp(request, led):
-	# if led==1:
-	# 	client.publish('led', '1');
-	# else:
-	# 	client.publish('led', '0');
-	return render(request, 'taps/tap_list.html',
-		{
-			'latest_tap_list': '',
-			'led': led,
-		}
-	)
