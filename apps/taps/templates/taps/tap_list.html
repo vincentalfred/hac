@@ -9,5 +9,12 @@
 		{% endfor %}
 	</ul>
 {% else %}
-	<p>No taps are available.as</p>
+	<p>No taps are available.</p>
 {% endif %}
+
+<br><br>
+led status = {{ led }}
+<br><br>
+
+<a href="/taps/esp8266/0">turn off</a>
+<a href="/taps/esp8266/1">turn on</a>

@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 
 from .models import Tap
+# from .mqtt import client
 
 class IndexView(generic.ListView):
     context_object_name = 'latest_tap_list'
