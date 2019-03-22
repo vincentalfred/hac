@@ -4,5 +4,4 @@ from . import views
 app_name = 'taps'
 urlpatterns = [
 	path('', views.IndexView.as_view(), name='index'),
-	path('esp8266/<int:led>', views.esp, name='esp'),
 ]
