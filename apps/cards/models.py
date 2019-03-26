@@ -15,4 +15,4 @@ class Unregistered_card (models.Model):
 	tap_time = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return self.card_uid +", from:"+ self.machine
+		return self.card_uid
