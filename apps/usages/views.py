@@ -12,7 +12,9 @@ from . models import Usage
 # 	def get_queryset(self):
 # 		return Usages
 
-def index(request):
-	latest_usage_list = Usage.objects.order_by('-start_time')
-	context = {'latest_usage_list': latest_usage_list}
-	return render(request, 'usages/index.html', context)
+class IndexView(generic.ListView):
+	template_name = 'usages/usages_list.html'
+	context_object_name = 'usages_list'
+
+	def get_queryset(self):
+		return Usage.objects.all()
