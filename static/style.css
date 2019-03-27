@@ -1,3 +1,7 @@
 .bg-hac {
   background-color: #ed6307 !important;
 }
+
+.card-header {
+	font-weight: bold;
+}
