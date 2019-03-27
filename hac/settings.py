@@ -52,6 +52,7 @@ PROJECT_APPS = [
     'apps.machines',
     'apps.usages',
     'apps.taps',
+    'octicons',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS

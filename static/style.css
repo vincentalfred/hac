@@ -1,7 +1,17 @@
+a:hover {
+	text-decoration: none;
+}
+
 .bg-hac {
   background-color: #ed6307 !important;
 }
 
 .card-title {
 	font-weight: bold;
+}
+
+.octicon {
+  display: inline-block;
+  vertical-align: text-top;
+  fill: currentColor;
 }
