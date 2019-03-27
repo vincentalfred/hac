@@ -4,7 +4,7 @@
 
 <div class="card my-5">
 	<div class="card-body">
-		<h4>Machines</h4>
+		<h5 class="card-title">Machines</h5>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -23,10 +23,11 @@
 					<td>{{ machine.machine_name }}</td>
 					<td>{{ machine.machine_type }}</td>
 					<td>
-
-						<span class="badge badge-success">Available</span>
-						<span class="badge badge-danger">Not Available</span>
-						{# <span class="badge badge-warning">Under Maintenance</span> #}
+						{% if machine.status == 1 %}
+							<span class="badge badge-success">Available</span>
+						{% else %}
+							<span class="badge badge-danger">Not Available</span>
+						{% endif %}
 					</td>
 				</tr>
 			</tbody>

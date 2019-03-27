@@ -6,7 +6,10 @@ from django.views import generic
 from .models import Machine
 
 class IndexView(generic.ListView):
-    context_object_name = 'machine_list'
+	context_object_name = 'machine_list'
 
-    def get_queryset(self):
-        return Machine.objects.all()
+	def get_queryset(self):
+		return Machine.objects.all()
+
+class DetailView(generic.DetailView):
+    model = Machine
