@@ -3,6 +3,7 @@
 __pycache__
 env/
 static/
+!static/style.css
 .DS_Store
 app.yaml
 cloud_sql_proxy
