@@ -1,4 +1,5 @@
 {% extends 'machines/base.html' %}
+{% load octicons %}
 
 {% block content %}
 <div class="card">
@@ -22,8 +23,18 @@
 {% block sidebar %}
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">Action</h5>
-			
+			<h5 class="card-title">Actions</h5>
+			<table class="table table-hover">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:type_update'  machine_type.id  %}';">
+					<tr><td>{% octicon "pencil" %} Edit</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:type_delete' machine_type.id%}';">
+					<tr><td>{% octicon "trashcan" %} Delete</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '#';">
+					<tr><td>{% octicon "telescope" %} View Usage</td></tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 {% endblock sidebar %}

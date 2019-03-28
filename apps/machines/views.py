@@ -23,22 +23,44 @@ class MachineDetail(generic.DetailView):
 
 class MachineCreate(generic.CreateView):
 	model = Machine
-	fields = ['machine_type', 'machine_name']
-	success_url = "machines/"
+	fields = ['machine_type', 'machine_name', 'status']
+	def get_success_url(self):
+		return reverse('machines:index')
 
 
 class MachineUpdate(generic.UpdateView):
 	model = Machine
-	fields = ['machine_type', 'machine_name']
-
+	fields = ['machine_type', 'machine_name', 'status']
 	def get_success_url(self):
 		return reverse('machines:machine_detail', kwargs={'pk': self.object.id})
 
 
 class MachineDelete(generic.DeleteView):
 	model = Machine
-	success_url = "machines/"
+	def get_success_url(self):
+		return reverse('machines:index')
 
-class TypeDetailView(generic.DetailView):
+
+class TypeDetail(generic.DetailView):
 	model = Machine_type
 
+
+class TypeCreate(generic.CreateView):
+	model = Machine_type
+	fields = ['machine_type_name']
+	def get_success_url(self):
+		return reverse('machines:index')
+
+
+class TypeUpdate(generic.UpdateView):
+	model = Machine_type
+	fields = ['machine_type_name']
+
+	def get_success_url(self):
+		return reverse('machines:type_detail', kwargs={'pk': self.object.id})
+
+
+class TypeDelete(generic.DeleteView):
+	model = Machine_type
+	def get_success_url(self):
+		return reverse('machines:index')
