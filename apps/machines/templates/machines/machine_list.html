@@ -2,7 +2,6 @@
 {% load octicons %}
 
 {% block content %}
-
 <div class="card">
 	<div class="card-body">
 		<h5 class="card-title">Machines</h5>
@@ -37,7 +36,7 @@
 			<tbody><tr><td>No machine is registered.</td></tr></tbody>
 		{% endif %}
 		</table>
-		<a href="#">{% octicon "plus" %} Add New Machine</a>
+		<a href="{% url "machines:machine_add" %}">{% octicon "plus" %} Add New Machine</a>
 		
 	</div>
 </div>

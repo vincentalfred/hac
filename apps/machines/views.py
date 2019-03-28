@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from .models import Machine, Machine_type
@@ -16,21 +16,28 @@ class IndexView(generic.ListView):
 	def get_queryset(self):
 		return Machine.objects.all()
 
+
 class MachineDetail(generic.DetailView):
 	model = Machine
+
 
 class MachineCreate(generic.CreateView):
 	model = Machine
 	fields = ['machine_type', 'machine_name']
 	success_url = "machines/"
 
+
 class MachineUpdate(generic.UpdateView):
 	model = Machine
 	fields = ['machine_type', 'machine_name']
-	success_url = 'machines/'
+
+	def get_success_url(self):
+		return reverse('machines:machine_detail', kwargs={'pk': self.object.id})
+
 
 class MachineDelete(generic.DeleteView):
 	model = Machine
+	success_url = "machines/"
 
 class TypeDetailView(generic.DetailView):
 	model = Machine_type

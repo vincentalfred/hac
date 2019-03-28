@@ -39,10 +39,10 @@
 		<div class="card-body">
 			<h5 class="card-title">Actions</h5>
 			<table class="table table-hover">
-				<tbody class="tbody-clickable" onclick="location.href = 'edit';">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_update'  machine.id  %}';">
 					<tr><td>{% octicon "pencil" %} Edit</td></tr>
 				</tbody>
-				<tbody class="tbody-clickable" onclick="location.href = 'delete';">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_delete' machine.id%}';">
 					<tr><td>{% octicon "trashcan" %} Delete</td></tr>
 				</tbody>
 				<tbody class="tbody-clickable" onclick="location.href = '#';">
