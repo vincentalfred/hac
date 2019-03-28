@@ -22,4 +22,5 @@ urlpatterns = [
     path('taps/', include('apps.taps.urls')),
     path('cards/', include('apps.cards.urls')),
     path('machines/', include('apps.machines.urls')),
+    path('accounts/', include('apps.accounts.urls')),
 ]
