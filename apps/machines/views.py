@@ -16,8 +16,22 @@ class IndexView(generic.ListView):
 	def get_queryset(self):
 		return Machine.objects.all()
 
-class DetailView(generic.DetailView):
+class MachineDetail(generic.DetailView):
+	model = Machine
+
+class MachineCreate(generic.CreateView):
+	model = Machine
+	fields = ['machine_type', 'machine_name']
+	success_url = "machines/"
+
+class MachineUpdate(generic.UpdateView):
+	model = Machine
+	fields = ['machine_type', 'machine_name']
+	success_url = 'machines/'
+
+class MachineDelete(generic.DeleteView):
 	model = Machine
 
 class TypeDetailView(generic.DetailView):
 	model = Machine_type
+
