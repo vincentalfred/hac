@@ -1,7 +1,7 @@
 {% extends 'machines/base.html' %}
 
 {% block content %}
-<div class="card my-5">
+<div class="card">
 	<div class="card-body">
 		<h5 class="card-title">Machines</h5>
 		<table class="table">
@@ -32,3 +32,11 @@
 </div>
 
 {% endblock content %}
+
+{% block sidebar %}
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Action</h5>
+		</div>
+	</div>
+{% endblock sidebar %}

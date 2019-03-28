@@ -34,7 +34,7 @@
 			</tbody>
 			{% endfor %}
 		{% else %}
-			<tbody><tr><td>No machines are registered.</td></tr></tbody>
+			<tbody><tr><td>No machine is registered.</td></tr></tbody>
 		{% endif %}
 		</table>
 		<a href="#">{% octicon "plus" %} Add New Machine</a>
@@ -43,3 +43,35 @@
 </div>
 
 {% endblock %}
+
+{% block sidebar %}
+	
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Machine Types</h5>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Type</th>
+					</tr>
+				</thead>
+			{% if machine_type_list %}
+				{% for machine_type in machine_type_list %}
+				<tbody class="tbody-clickable" onclick="location.href = 'types/{{ machine_type.id }}';">
+				<tr>
+					<td>{{ machine_type.id }}</td>
+					<td>{{ machine_type.machine_type_name }}</td>
+				</tr>
+				</tbody>
+				{% endfor %}
+			{% else %}
+				<tbody><tr><td>No machine type is registered.</td></tr></tbody>
+			{% endif %}				
+			</table>
+			<a href="#">{% octicon "plus" %} Add New Machine Type</a>
+			
+		</div>
+	</div>
+
+{% endblock sidebar %}
