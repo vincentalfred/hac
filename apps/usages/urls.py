@@ -4,5 +4,4 @@ from . import views
 app_name = 'usages'
 urlpatterns = [
 	path('', views.IndexView.as_view(), name='index'),
-	
 ]
