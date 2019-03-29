@@ -7,45 +7,53 @@
 	<div calss="card-body">
 		<table class="table table-hover">
 			<tr>
-				<th>id</th>	
-				<th>user</th>
-				<th>carduid</th>
+				<th>ID</th>	
+				<th>User</th>
+				<th>CardUID</th>
 			</tr>
 
-		{% if cards_list %}
-				{% for card in card_list %}
+			{% if cards_list %}
+				{% for card in cards_list %}
 				<tr>
 					<td>{{ card.id }}</td>
-					<td>{{ card.user }}</td>
 					<td>{{ card.card_uid }}</td>
+					<td>{{ card.user }}</td>
 				</tr>
 				{% endfor %}
-		{% else %}
-				<tr><span class="badge badge-primary">No cards available</span></tr>
-		{% endif %}
-
-
-		{% if unregistered_card_list %}
-				<tr>
-					<th>id</th>	
-					<th>machine</th>
-					<th>carduid</th>
-					<th>tap time</th>
-				</tr>
-				{% for unregistered_card in unregistered_card_list %}
-					<tr>
-						<td>{{ unregistered_card.id }}</td>
-						<td>{{ unregistered_card.machine }}</td>
-						<td>{{ unregistered_card.card_uid }}</td>
-						<td>{{ unregistered_card.tap_time }}</td>
-					</tr>
-				{% endfor %}
-				
-				{% else  %}
-						<tr><span class="badge badge-danger">No unregistered cards available</span></tr>
+			{% else %}
+					<tr><span class="badge badge-primary">No cards available</span></tr>
 		{% endif %}
 		</table>
 	</div>
+</div>
+
+
+<div class="card my-5">
+	<div class="card-header">Unregistered Card List</div>
+	<div class="card-body">
+		<table class="table table-hover">
+			<tr>
+				<th>ID</th>
+				<th>Card UID</th>
+				<th>Tap Time</th>
+				<th>Machine ID</th>
+			</tr>
+
+				{% if unregistered_cards_list %}
+					{% for unregistered_card in unregistered_cards_list %}
+						<tr>
+							<td>{{ unregistered_card.id }}</td>
+							<td>{{ unregistered_card.card_uid }}</td>
+							<td>{{ unregistered_card.tap_time }}</td>
+							<td>{{ unregistered_card.machine_id }}</td>
+						</tr>
+					{% endfor %}
+				
+				{% else  %}
+						<tr><span class="badge badge-danger">No unregistered cards available</span></tr>
+				{% endif %}
+		</table>
+	</div>	
 </div>
 {% endblock %}
 
