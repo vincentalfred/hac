@@ -5,7 +5,7 @@
 		<div class="card-body">
 			<h5 class="card-title">Usages</h5>
 				{% if latest_usage_list %}
-				<table class="table table-hover">
+				<table id="usage_table" class="table table-hover">
 					<thead>
 						<tr>
 							<th>id</th>	
@@ -45,7 +45,7 @@
 			<h5 class="card-title">Filter</h5>
 				{% if machine_type_list %}
 					{% for machine_type in machine_type_list %}
-						<button id="{{ machine_type.id }}" class="btn btn-hac mr-1">{{ machine_type.machine_type_name }}</button>
+						<button id="{{ machine_type.id }}" class="btn btn-hac mr-1 mb-1">{{ machine_type.machine_type_name }}</button>
 					{% endfor %}
 				{% else %}
 					<h5>No Machine Type Registered.</h5>
@@ -60,6 +60,7 @@ $(document).ready(function(){
 	{% if machine_type_list %}
 		{% for machine_type in machine_type_list %}
 			$("#{{ machine_type.id }}").click(function(){
+				{# $('#usage_table').empty(); #}
 				if ($("#{{ machine_type.id }}").hasClass("btn-hac")) {
 					$("#{{ machine_type.id }}").removeClass("btn-hac").addClass("btn-outline-hac");
 				}
