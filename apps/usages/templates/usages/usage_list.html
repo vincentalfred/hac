@@ -1,0 +1,37 @@
+{% extends "usages/base.html" %}
+
+{% block content %}
+
+	{% if latest_usage_list %}
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>id</th>	
+					<th>user</th>
+					<th>machine type</th>
+					<th>machine</th>
+					<th>start</th>
+					<th>end</th>
+					<th>usage (Wh)</th>
+				</tr>
+			</thead>
+			
+			{% for usage in latest_usage_list %}
+			<tbody>
+				<tr>
+					<td>{{ usage.id }}</td>
+					<td>{{ usage.user }}</td>
+					<td>{{ usage.machine_type }}</td>
+					<td>{{ usage.machine }}</td>
+					<td>{{ usage.start_time }}</td>
+					<td>{{ usage.end_time }}</td>
+					<td>{{ usage.total_usage }}</td>
+				</tr>
+			</tbody>
+			{% endfor %}
+		<table>
+	{% else %}
+		<p>No usages are available.</p>
+	{% endif %}
+	
+{% endblock content %}

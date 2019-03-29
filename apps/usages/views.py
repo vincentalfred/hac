@@ -5,14 +5,13 @@ from django.views import generic
 
 from . models import Usage
 
-# class IndexView(generic.ListView):
-# 	template_name = 'usages/index.html'
-# 	context_object_name = ''
+class IndexView(generic.ListView):
+	context_object_name = 'latest_usage_list'
 
-# 	def get_queryset(self):
-# 		return Usages
+	def get_queryset(self):
+		return Usage.objects.order_by('-start_time')
 
-def index(request):
-	latest_usage_list = Usage.objects.order_by('-start_time')
-	context = {'latest_usage_list': latest_usage_list}
-	return render(request, 'usages/index.html', context)
+# def index(request):
+# 	latest_usage_list = Usage.objects.order_by('-start_time')
+# 	context = {'latest_usage_list': latest_usage_list}
+# 	return render(request, 'usages/index.html', context)
