@@ -1,0 +1,54 @@
+{% extends 'machines/base.html' %}
+{% load octicons %}
+
+{% block content %}
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Machines</h5>
+		<table class="table">
+			<tr>
+				<th>Id</th>
+				<td>{{ machine.id }}</td>
+			</tr>
+			<tr>
+				<th>Name</th>
+				<td>{{ machine.machine_name }}</td>
+			</tr>
+			<tr>
+				<th>Type</th>
+				<td>{{ machine.machine_type }}</td>
+			</tr>
+			<tr>
+				<th>Status</th>
+				<td>
+					{% if machine.status == 1 %}
+						<span class="badge badge-success">Available</span>
+					{% else %}
+						<span class="badge badge-danger">Not Available</span>
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+{% endblock content %}
+
+
+{% block sidebar %}
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Actions</h5>
+			<table class="table table-hover">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_update'  machine.id  %}';">
+					<tr><td>{% octicon "pencil" %} Edit</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_delete' machine.id%}';">
+					<tr><td>{% octicon "trashcan" %} Delete</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '#';">
+					<tr><td>{% octicon "telescope" %} View Usage</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock sidebar %}

@@ -6,6 +6,7 @@
 
 	<title>Hardware Access Control</title>
 	{% load static %}
+	{% load octicons %}
 	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="{% static '/style.css' %}">
@@ -20,9 +21,13 @@
 
 	<div class="content container">
 		<div class="row">
-			<div class="col-sm-12 col-lg-8">
+			<div class="col-sm-12 col-lg-8 py-5">
 				{% block content %}
 				{% endblock %}
+			</div>
+			<div class="col-sm-12 col-lg-4 py-5">
+				{% block sidebar %}
+				{% endblock sidebar %}
 			</div>
 		</div>
 	</div>
