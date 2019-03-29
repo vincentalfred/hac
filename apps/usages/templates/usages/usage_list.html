@@ -1,37 +1,73 @@
-{% extends "usages/base.html" %}
+{% extends 'usages/base.html' %}
 
 {% block content %}
-
-	{% if latest_usage_list %}
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>id</th>	
-					<th>user</th>
-					<th>machine type</th>
-					<th>machine</th>
-					<th>start</th>
-					<th>end</th>
-					<th>usage (Wh)</th>
-				</tr>
-			</thead>
-			
-			{% for usage in latest_usage_list %}
-			<tbody>
-				<tr>
-					<td>{{ usage.id }}</td>
-					<td>{{ usage.user }}</td>
-					<td>{{ usage.machine_type }}</td>
-					<td>{{ usage.machine }}</td>
-					<td>{{ usage.start_time }}</td>
-					<td>{{ usage.end_time }}</td>
-					<td>{{ usage.total_usage }}</td>
-				</tr>
-			</tbody>
-			{% endfor %}
-		<table>
-	{% else %}
-		<p>No usages are available.</p>
-	{% endif %}
-	
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Usages</h5>
+				{% if latest_usage_list %}
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>id</th>	
+							<th>user</th>
+							<th>machine type</th>
+							<th>machine</th>
+							<th>start</th>
+							<th>end</th>
+							<th>usage (Wh)</th>
+						</tr>
+					</thead>
+					
+					{% for usage in latest_usage_list %}
+					<tbody>
+						<tr>
+							<td>{{ usage.id }}</td>
+							<td>{{ usage.user }}</td>
+							<td>{{ usage.machine_type }}</td>
+							<td>{{ usage.machine }}</td>
+							<td>{{ usage.start_time }}</td>
+							<td>{{ usage.end_time }}</td>
+							<td>{{ usage.total_usage }}</td>
+						</tr>
+					</tbody>
+					{% endfor %}
+				</table>
+			{% else %}
+				<p>No usages are available.</p>
+			{% endif %}
+		</div>
+	</div>
 {% endblock content %}
+
+{% block sidebar %}
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Filter</h5>
+				{% if machine_type_list %}
+					{% for machine_type in machine_type_list %}
+						<button id="{{ machine_type.id }}" class="btn btn-hac mr-1">{{ machine_type.machine_type_name }}</button>
+					{% endfor %}
+				{% else %}
+					<h5>No Machine Type Registered.</h5>
+				{% endif %}
+				
+		</div>
+	</div>
+{% endblock sidebar %}
+
+{% block javascript %}
+$(document).ready(function(){
+	{% if machine_type_list %}
+		{% for machine_type in machine_type_list %}
+			$("#{{ machine_type.id }}").click(function(){
+				if ($("#{{ machine_type.id }}").hasClass("btn-hac")) {
+					$("#{{ machine_type.id }}").removeClass("btn-hac").addClass("btn-outline-hac");
+				}
+				else {
+					$("#{{ machine_type.id }}").removeClass("btn-outline-hac").addClass("btn-hac");
+				}
+			});
+		{% endfor %}
+	{% endif %}
+});
+{% endblock javascript %}
