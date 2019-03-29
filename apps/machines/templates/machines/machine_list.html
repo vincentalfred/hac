@@ -1,29 +1,76 @@
 {% extends 'machines/base.html' %}
+{% load octicons %}
 
 {% block content %}
-<div class="card my-5">
-	<div class="card-header">Machines</div>
+<div class="card">
 	<div class="card-body">
+		<h5 class="card-title">Machines</h5>
 		<table class="table table-hover">
-			<tr>
-				<th>id</th>
-				<th>Machine Name</th>
-				<th>Machine Type</th>
-			</tr>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Status</th>
+				</tr>
+			</thead>
 
 		{% if machine_list %}
 			{% for machine in machine_list %}
-			<tr>
-				<td>{{ machine.id }}</td>
-				<td>{{ machine.machine_name }}</td>
-				<td>{{ machine.machine_type }}</td>
-			</tr>
-			
+			<tbody class="tbody-clickable" onclick="location.href = '{{ machine.id }}';">
+				<tr>
+					<td>{{ machine.id }}</td>
+					<td>{{ machine.machine_name }}</td>
+					<td>{{ machine.machine_type }}</td>
+					<td>
+						{% if machine.status == 1 %}
+							<span class="badge badge-success">Available</span>
+						{% else %}
+							<span class="badge badge-danger">Not Available</span>
+						{% endif %}
+					</td>
+				</tr>
+			</tbody>
 			{% endfor %}
 		{% else %}
-			<tr>No machines are registered.</tr>
+			<tbody><tr><td>No machine is registered.</td></tr></tbody>
 		{% endif %}
 		</table>
+		<a href="{% url "machines:machine_add" %}">{% octicon "plus" %} Add New Machine</a>
+		
 	</div>
 </div>
+
 {% endblock %}
+
+{% block sidebar %}
+	
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Machine Types</h5>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Type</th>
+					</tr>
+				</thead>
+			{% if machine_type_list %}
+				{% for machine_type in machine_type_list %}
+				<tbody class="tbody-clickable" onclick="location.href = 'types/{{ machine_type.id }}';">
+				<tr>
+					<td>{{ machine_type.id }}</td>
+					<td>{{ machine_type.machine_type_name }}</td>
+				</tr>
+				</tbody>
+				{% endfor %}
+			{% else %}
+				<tbody><tr><td>No machine type is registered.</td></tr></tbody>
+			{% endif %}				
+			</table>
+			<a href="{% url 'machines:type_add' %}">{% octicon "plus" %} Add New Machine Type</a>
+			
+		</div>
+	</div>
+
+{% endblock sidebar %}
