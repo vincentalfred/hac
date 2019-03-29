@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 
 from . models import Card, Unregistered_card
+from apps.machines.models import Machine_type
 
 # class IndexView(generic.ListView):
 # 	template_name = 'usages/index.html'
@@ -12,11 +13,12 @@ from . models import Card, Unregistered_card
 # 	def get_queryset(self):
 # 		return Usages
 
-def index(request):
-	card_list = Card.objects.all()
-	unregistered_card_list = Unregistered_card.objects.all()
-	context = {
-		'card_list': card_list,
-		'unregistered_card_list': unregistered_card_list,
-	}
-	return render(request, 'cards/index.html', context)
+class IndexView(generic.ListView):
+	template_name = 'cards/cards_list.html'
+	context_object_name = 'cards_list'
+	def get_queryset(self):
+		return Card.objects.all()
+
+
+
+	
