@@ -20,7 +20,6 @@
 			<tr>
 				<th>User Access</th>
 				<td>
-					{{ certification_list }}
 					<table>
 						<thead>
 							<tr>
@@ -28,36 +27,21 @@
 								<th>Authorized</th>
 							</tr>
 						</thead>
+						{% for certification, authorized in certification_list.items %}
 						<tbody>
 							<tr>
-								<td></td>
-								<td></td>
+								<td>{{ certification }}</td>
+								<td>
+									{% if authorized %}
+										<span class="badge badge-success">Authorized</span>
+									{% else %}
+										<span class="badge badge-danger">Not Authorized</span>
+									{% endif %}
+								</td>
 							</tr>
 						</tbody>
+						{% endfor %}
 					</table>
-					{% for certification, authorized in certification_list.items %}
-						{{ certification }}
-						{% if authorized %}
-							<span class="badge badge-success">Available</span>
-						{% else %}
-							<span class="badge badge-danger">Not Available</span>
-						{% endif %}	
-					{% endfor %}
-					<!-- {% if certification.machine_type == 1 %}
-						<span class="badge badge-success">Available</span>
-					{% else %}
-						<span class="badge badge-danger">Not Available</span>
-					{% endif %}
-					{% if certification.machine_type == 2 %}
-						<span class="badge badge-success">Available</span>
-					{% else %}
-						<span class="badge badge-danger">Not Available</span>
-					{% endif %}
-					{% if certification.machine_type == 3 %}
-						<span class="badge badge-success">Available</span>
-					{% else %}
-						<span class="badge badge-danger">Not Available</span>
-					{% endif %} -->
 				</td>
 			</tr>
 		</table>
