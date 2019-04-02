@@ -4,17 +4,15 @@ from django.urls import reverse
 from django.views import generic
 
 from . models import Usage
-
-# class IndexView(generic.ListView):
-# 	template_name = 'usages/index.html'
-# 	context_object_name = ''
-
-# 	def get_queryset(self):
-# 		return Usages
+from apps.machines.models import Machine_type
 
 class IndexView(generic.ListView):
-	template_name = 'usages/usages_list.html'
-	context_object_name = 'usages_list'
-
+	context_object_name = 'latest_usage_list'
+	
+	def get_context_data(self, **kwargs):
+		context = super(IndexView, self).get_context_data(**kwargs)
+		context['machine_type_list'] = Machine_type.objects.all()
+		return context
+		
 	def get_queryset(self):
-		return Usage.objects.all()
+		return Usage.objects.order_by('-start_time')

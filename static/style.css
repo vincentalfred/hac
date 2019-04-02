@@ -3,7 +3,7 @@ a:hover {
 }
 
 .bg-hac {
-  background-color: #ed6307 !important;
+	background-color: #ed6307 !important;
 }
 
 .card-title {
@@ -11,7 +11,72 @@ a:hover {
 }
 
 .octicon {
-  display: inline-block;
-  vertical-align: text-top;
-  fill: currentColor;
+	display: inline-block;
+	vertical-align: text-top;
+	fill: currentColor;
+}
+
+.btn-hac {
+	color: #fff;
+	background-color: #ed6307;
+	border-color: #ed6307;
+}
+.btn-hac:hover {
+  color: #fff;
+  background-color: #ce5506;
+  border-color: #ba4d05;
+}
+
+.btn-hac:focus, .btn-hac.focus {
+  box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
+
+.btn-hac.disabled, .btn-hac:disabled {
+  color: #fff;
+  background-color: #ed6307;
+  border-color: #ed6307;
+}
+
+.btn-hac:not(:disabled):not(.disabled):active, .btn-hac:not(:disabled):not(.disabled).active,
+.show > .btn-hac.dropdown-toggle {
+  color: #fff;
+  background-color: #ce5506;
+  border-color: #005cbf;
+}
+
+.btn-hac:not(:disabled):not(.disabled):active:focus, .btn-hac:not(:disabled):not(.disabled).active:focus,
+.show > .btn-hac.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
+
+.btn-outline-hac {
+	color: #ed6307;
+	border-color: #ed6307;
+}
+
+.btn-outline-hac:hover {
+  color: #fff;
+  background-color: #ed6307;
+  border-color: #ed6307;
+}
+
+.btn-outline-hac:focus, .btn-outline-hac.focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.btn-outline-hac.disabled, .btn-outline-hac:disabled {
+  color: #ed6307;
+  background-color: transparent;
+}
+
+.btn-outline-hac:not(:disabled):not(.disabled):active, .btn-outline-hac:not(:disabled):not(.disabled).active,
+.show > .btn-outline-hac.dropdown-toggle {
+  color: #fff;
+  background-color: #ed6307;
+  border-color: #ed6307;
+}
+
+.btn-outline-hac:not(:disabled):not(.disabled):active:focus, .btn-outline-hac:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-hac.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
