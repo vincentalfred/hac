@@ -2,57 +2,60 @@
 
 
 {% block content %}
-<div class="card my-5" >
-	<div class="card-header">Card List</div>
-	<div calss="card-body">
+<div class="card mb-5" >
+	<div class="card-body">
+		<h5 class="card-title">Card List</h5>
+		{% if cards_list %}
 		<table class="table table-hover">
-			<tr>
-				<th>ID</th>	
-				<th>User</th>
-				<th>CardUID</th>
-			</tr>
-
-			{% if cards_list %}
-				{% for card in cards_list %}
+			<thead>
+				<tr>
+					<th>ID</th>	
+					<th>User</th>
+					<th>CardUID</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for card in cards_list %}
 				<tr>
 					<td>{{ card.id }}</td>
 					<td>{{ card.card_uid }}</td>
 					<td>{{ card.user }}</td>
 				</tr>
-				{% endfor %}
-			{% else %}
-					<tr><span class="badge badge-primary">No cards available</span></tr>
-		{% endif %}
+			{% endfor %}	
+			</tbody>			
 		</table>
+		{% else %}
+			<span class="badge badge-secondary">No Card Registered</span>
+		{% endif %}
 	</div>
 </div>
 
-
-<div class="card my-5">
-	<div class="card-header">Unregistered Card List</div>
+<div class="card">
 	<div class="card-body">
+		<h5 class="card-title">Unregistered Card List</h5>
+		{% if unregistered_cards_list %}
 		<table class="table table-hover">
-			<tr>
-				<th>ID</th>
-				<th>Card UID</th>
-				<th>Tap Time</th>
-				<th>Machine ID</th>
-			</tr>
-
-				{% if unregistered_cards_list %}
-					{% for unregistered_card in unregistered_cards_list %}
-						<tr>
-							<td>{{ unregistered_card.id }}</td>
-							<td>{{ unregistered_card.card_uid }}</td>
-							<td>{{ unregistered_card.tap_time }}</td>
-							<td>{{ unregistered_card.machine_id }}</td>
-						</tr>
-					{% endfor %}
-				
-				{% else  %}
-						<tr><span class="badge badge-danger">No unregistered cards available</span></tr>
-				{% endif %}
-		</table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Card UID</th>
+					<th>Tap Time</th>
+					<th>Machine ID</th>
+				</tr>
+			</thead>
+			{% for unregistered_card in unregistered_cards_list %}
+				<tr>
+					<td>{{ unregistered_card.id }}</td>
+					<td>{{ unregistered_card.card_uid }}</td>
+					<td>{{ unregistered_card.tap_time }}</td>
+					<td>{{ unregistered_card.machine_id }}</td>
+				</tr>
+			{% endfor %}
+		</table>		
+		{% else %}
+			<span class="badge badge-secondary">No Unregistered Card Available</span>
+		{% endif %}
+		
 	</div>	
 </div>
 {% endblock %}

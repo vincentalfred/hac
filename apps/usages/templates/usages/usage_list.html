@@ -33,7 +33,7 @@
 					{% endfor %}
 				</table>
 			{% else %}
-				<p>No usages are available.</p>
+				<span class="badge badge-secondary">No Usage Registered</span>
 			{% endif %}
 		</div>
 	</div>
@@ -48,7 +48,7 @@
 						<button id="{{ machine_type.id }}" class="btn btn-hac mr-1 mb-1">{{ machine_type.machine_type_name }}</button>
 					{% endfor %}
 				{% else %}
-					<h5>No Machine Type Registered.</h5>
+					<span class="badge badge-secondary">No Machine Type Registered</span>
 				{% endif %}
 				
 		</div>

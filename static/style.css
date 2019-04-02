@@ -80,3 +80,7 @@ a:hover {
 .show > .btn-outline-hac.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
+
+.nav-link {
+  font-weight: 600;
+}
