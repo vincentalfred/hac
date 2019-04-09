@@ -4,6 +4,8 @@
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Usages</h5>
+				<canvas id="usageChart" class="mb-5"></canvas>
+				
 				{% if latest_usage_list %}
 				<table id="usageTable" class="table table-hover">
 					<thead>
@@ -108,5 +110,57 @@ $(document).ready(function(){
 			});
 		{% endfor %}
 	{% endif %}
+
+	var ctx = document.getElementById('usageChart');
+	var data = {
+		labels: ["2 April", "3 April", "4 April", "5 April", "6 April", "7 April", "8 April"],
+		<!--labels: ["2 April 2019", "3 April 2019", "4 April 2019", "5 April 2019", "6 April 2019", "7 April 2019", "8 April 2019"],-->
+		datasets: [
+			{
+				label: 'Drill',
+				backgroundColor: '#f2bd2b',
+				opacity: '0.6',
+				<!--backgroundColor: 'rgba(237, 153, 7, .8)',-->
+				data: [30, 60, 35, 23, 12, 45, 20],
+			},
+			{
+				label: 'Grinder',
+				backgroundColor: '#ed6307',
+				<!--backgroundColor: 'rgba(237, 99, 7, .8)',-->
+				data: [20, 10, 60, 33, 30, 42, 22],
+			},
+			{
+				label: 'Iron',
+				backgroundColor: '#ed0766',
+				<!--backgroundColor: 'rgba(19, 72, 157, .8)',-->
+				data: [20, 10, 23, 41, 10, 20, 30],
+			},
+			{
+				label: 'Glue',
+				backgroundColor: '#a007ed',
+				<!--backgroundColor: 'rgba(4, 150, 126, .8)',-->
+				data: [20, 10, 23, 41, 42, 32, 12],
+			},
+		],
+	};
+	var usageChart = new Chart(ctx, {
+		type: 'bar',
+		data: data,
+		options: {
+			responsive: true,
+			scales: {
+				xAxes: [{
+					barPercentage: 1.0,
+		            barThickness: 16,
+		            maxBarThickness: 24,
+					stacked: true,
+				}],
+				yAxes: [{
+					stacked: true,
+				}]
+			},
+		}
+	});
 });
+
 {% endblock javascript %}
