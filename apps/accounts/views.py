@@ -23,6 +23,13 @@ class IndexView(generic.ListView):
 	def get_queryset(self):
 		return Profile.objects.select_related('user')
 
+class LoginView(generic.ListView):
+	template_name = 'accounts/accounts_login.html'
+	context_object_name = 'accounts_login'
+
+	def get_queryset(self):
+		return Profile.objects.select_related('user')
+
 class DetailView(generic.DetailView): 
 	template_name = 'accounts/accounts_detail.html'
 	context_object_name = 'account'

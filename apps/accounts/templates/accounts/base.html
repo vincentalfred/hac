@@ -4,7 +4,7 @@
 {% block navbar %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-hac">
-	<a class="navbar-brand mr-auto" href="#">Hardware Access Control (HAC)</a>
+	<a class="navbar-brand mr-auto" href="/">Hardware Access Control (HAC)</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -31,12 +31,11 @@
 					{% if  user.is_authenticated %}
 						{{ user.username }}
 					{% else %}
-						Log In
+						Log In 
 					{% endif %}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="#">Edit Profile</a>
-					<a class="dropdown-item" href="#">Log Out</a>
+					<a class="dropdown-item" href={% url "accounts:login" %}>Sign In</a> 
 				</div>
 			</li>
 		</ul>

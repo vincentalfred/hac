@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+
+{% block navbar %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-hac">
+  <a class="navbar-brand mr-auto" href="#">Hardware Access Control (HAC)</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+    </ul>
+  </div>
+</nav>
+ <div class="login-page">
+    <div class="form">  
+      <form class="login-form">
+          <input type="text" placeholder="username"/>
+          <input type="password" placeholder="password"/>
+          <button>login</button>
+          <p class="message">Administrator Zone <a href="https://binusmaya.binus.ac.id/newDefault/login.html">Need Help? Please Contact Administrator</a></p>
+      </form>
+    </div>
+  </div>
+{% endblock %}
