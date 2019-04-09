@@ -64,3 +64,11 @@ class TypeDelete(generic.DeleteView):
 	model = Machine_type
 	def get_success_url(self):
 		return reverse('machines:index')
+
+class HomeView(generic.ListView):
+	template_name = 'machines/home.html' 
+	context_object_name = 'machine_list'
+
+
+	def get_queryset(self):
+		return Machine.objects.all()
