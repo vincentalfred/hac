@@ -112,35 +112,60 @@ $(document).ready(function(){
 	{% endif %}
 
 	var ctx = document.getElementById('usageChart');
+	var color = ['#f2bd2b', '#ed6307', '#ed0766', '#a007ed'];
+	<!--
 	var data = {
-		labels: ["2 April", "3 April", "4 April", "5 April", "6 April", "7 April", "8 April"],
-		<!--labels: ["2 April 2019", "3 April 2019", "4 April 2019", "5 April 2019", "6 April 2019", "7 April 2019", "8 April 2019"],-->
+		labels: ["2 April 2019", "3 April 2019", "4 April 2019", "5 April 2019", "6 April 2019", "7 April 2019", "8 April 2019"],
 		datasets: [
 			{
 				label: 'Drill',
 				backgroundColor: '#f2bd2b',
+				// backgroundColor: 'rgba(237, 153, 7, .8)',
 				opacity: '0.6',
-				<!--backgroundColor: 'rgba(237, 153, 7, .8)',-->
+				
 				data: [30, 60, 35, 23, 12, 45, 20],
 			},
 			{
 				label: 'Grinder',
 				backgroundColor: '#ed6307',
-				<!--backgroundColor: 'rgba(237, 99, 7, .8)',-->
 				data: [20, 10, 60, 33, 30, 42, 22],
 			},
 			{
 				label: 'Iron',
 				backgroundColor: '#ed0766',
-				<!--backgroundColor: 'rgba(19, 72, 157, .8)',-->
 				data: [20, 10, 23, 41, 10, 20, 30],
 			},
 			{
 				label: 'Glue',
 				backgroundColor: '#a007ed',
-				<!--backgroundColor: 'rgba(4, 150, 126, .8)',-->
 				data: [20, 10, 23, 41, 42, 32, 12],
 			},
+		],
+	};
+	-->
+	var dateList = new Set();
+	var usagePerType = {};
+	{% for machine_type in machine_type_list %}
+		usagePerType['{{ machine_type.machine_type_name }}'] = new Array();
+	{% endfor %}
+
+	{% for dailyUsage in  dailyUsage_list %}
+		if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
+			dateList.add('{{ dailyUsage.date|date:'j M y' }}');
+		}
+		usagePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
+	{% endfor %}
+
+	var data = {
+		labels: Array.from(dateList),
+		datasets: [
+			{% for machine_type in machine_type_list %}
+				{
+					label: '{{ machine_type.machine_type_name }}',
+					backgroundColor: color[{{ machine_type.id }}%4],
+					data: usagePerType['{{ machine_type.machine_type_name }}'],
+				},
+			{% endfor %}
 		],
 	};
 	var usageChart = new Chart(ctx, {
