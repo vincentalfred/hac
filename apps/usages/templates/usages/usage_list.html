@@ -42,6 +42,18 @@
 {% endblock content %}
 
 {% block sidebar %}
+	<div class="card mb-5">
+		<div class="card-body">
+			<h5 class="card-title">Chart Type</h5>
+			<div class="radio">
+				<label><input id="timeChartRadio" type="radio" name="chartRadio" value="time"checked>Time Usage</label>
+			</div>
+			<div class="radio">
+				<label><input id="energyChartRadio" type="radio" name="chartRadio" value="energy">Energy Usage</label>
+			</div>
+			
+		</div>
+	</div>
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Filter</h5>
@@ -58,6 +70,80 @@
 {% endblock sidebar %}
 
 {% block javascript %}
+
+var ctx = document.getElementById('usageChart');
+var usageChart;
+var dataType="time";
+var color = ['#f2bd2b', '#ed6307', '#ed0766', '#a007ed'];
+
+var dateList = new Set();
+var timePerType = {};
+var energyPerType = {};
+{% for machine_type in machine_type_list %}
+	timePerType['{{ machine_type.machine_type_name }}'] = new Array();
+	energyPerType['{{ machine_type.machine_type_name }}'] = new Array();
+{% endfor %}
+
+{% for dailyUsage in  dailyUsage_list %}
+	if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
+		dateList.add('{{ dailyUsage.date|date:'j M y' }}');
+	}
+	energyPerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
+	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time.seconds }}/60);
+{% endfor %}
+
+var dataTime = {
+	labels: Array.from(dateList),
+	datasets: [
+		{% for machine_type in machine_type_list %}
+			{
+				label: '{{ machine_type.machine_type_name }}',
+				backgroundColor: color[{{ machine_type.id }}%4],
+				data: timePerType['{{ machine_type.machine_type_name }}'],
+			},
+		{% endfor %}
+	],
+};
+var dataEnergy = {
+	labels: Array.from(dateList),
+	datasets: [
+		{% for machine_type in machine_type_list %}
+			{
+				label: '{{ machine_type.machine_type_name }}',
+				backgroundColor: color[{{ machine_type.id }}%4],
+				data: energyPerType['{{ machine_type.machine_type_name }}'],
+			},
+		{% endfor %}
+	],
+};
+var chartOptions = {
+	responsive: true,
+	scales: {
+		xAxes: [{
+			barPercentage: 1.0,
+			barThickness: 16,
+			maxBarThickness: 24,
+			stacked: true,
+		}],
+		yAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: "Time (Minutes)",
+			},
+			stacked: true,
+		}]
+	},
+};
+
+function initChart() {
+	var chartData = dataType=="time"? dataTime : dataEnergy;
+	usageChart = new Chart(ctx, {
+		type: 'bar',
+		data: chartData,
+		options: chartOptions,
+	});
+}
+
 var machine_type_set = new Set();
 function reloadTable() {
 	alert("reloading table");
@@ -91,6 +177,7 @@ function reloadTable() {
 		}
 	{% endfor %}
 }
+
 $(document).ready(function(){
 	{% if machine_type_list %}
 		{% for machine_type in machine_type_list %}
@@ -111,81 +198,25 @@ $(document).ready(function(){
 		{% endfor %}
 	{% endif %}
 
-	var ctx = document.getElementById('usageChart');
-	var color = ['#f2bd2b', '#ed6307', '#ed0766', '#a007ed'];
-	<!--
-	var data = {
-		labels: ["2 April 2019", "3 April 2019", "4 April 2019", "5 April 2019", "6 April 2019", "7 April 2019", "8 April 2019"],
-		datasets: [
-			{
-				label: 'Drill',
-				backgroundColor: '#f2bd2b',
-				// backgroundColor: 'rgba(237, 153, 7, .8)',
-				opacity: '0.6',
-				
-				data: [30, 60, 35, 23, 12, 45, 20],
-			},
-			{
-				label: 'Grinder',
-				backgroundColor: '#ed6307',
-				data: [20, 10, 60, 33, 30, 42, 22],
-			},
-			{
-				label: 'Iron',
-				backgroundColor: '#ed0766',
-				data: [20, 10, 23, 41, 10, 20, 30],
-			},
-			{
-				label: 'Glue',
-				backgroundColor: '#a007ed',
-				data: [20, 10, 23, 41, 42, 32, 12],
-			},
-		],
-	};
-	-->
-	var dateList = new Set();
-	var usagePerType = {};
-	{% for machine_type in machine_type_list %}
-		usagePerType['{{ machine_type.machine_type_name }}'] = new Array();
-	{% endfor %}
-
-	{% for dailyUsage in  dailyUsage_list %}
-		if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
-			dateList.add('{{ dailyUsage.date|date:'j M y' }}');
-		}
-		usagePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
-	{% endfor %}
-
-	var data = {
-		labels: Array.from(dateList),
-		datasets: [
-			{% for machine_type in machine_type_list %}
-				{
-					label: '{{ machine_type.machine_type_name }}',
-					backgroundColor: color[{{ machine_type.id }}%4],
-					data: usagePerType['{{ machine_type.machine_type_name }}'],
-				},
-			{% endfor %}
-		],
-	};
-	var usageChart = new Chart(ctx, {
-		type: 'bar',
-		data: data,
-		options: {
-			responsive: true,
-			scales: {
-				xAxes: [{
-					barPercentage: 1.0,
-		            barThickness: 16,
-		            maxBarThickness: 24,
-					stacked: true,
-				}],
-				yAxes: [{
-					stacked: true,
-				}]
-			},
+	$('#timeChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			usageChart.destroy();
+			chartOptions.scales.yAxes[0].scaleLabel.labelString = "Time (Minutes)";
+			initChart();
 		}
 	});
+	$('#energyChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			usageChart.destroy();
+			chartOptions.scales.yAxes[0].scaleLabel.labelString = "Energy (Wh)";
+			initChart();
+		}
+	});
+	
+	initChart();
+
 });
 
 {% endblock javascript %}
