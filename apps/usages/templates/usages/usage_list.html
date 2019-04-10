@@ -89,7 +89,7 @@ var energyPerType = {};
 		dateList.add('{{ dailyUsage.date|date:'j M y' }}');
 	}
 	energyPerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
-	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time.seconds }}/60);
+	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time }}/60);
 {% endfor %}
 
 var dataTime = {
