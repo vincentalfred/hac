@@ -1,0 +1,53 @@
+
+{% extends 'base.html' %}
+{% load octicons %}
+
+{% block navbar %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-hac">
+	<a class="navbar-brand mr-auto" href="/">Hardware Access Control (HAC)</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+		<ul class="navbar-nav">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+					{% if  user.is_authenticated %}
+						{{ user.username }}
+					{% else %}
+						Log In 
+					{% endif %}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href={% url "accounts:login" %}>Sign In</a> 
+				</div>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+{% for machine in machine_list %}
+<div class="card col-sm-4 col-lg-3 mb-2 mr-2">
+	<div class="card-body">
+		<h5 class="card-title">{{ machine.machine_name }}</h5>
+		<img class="img-thumbnail"
+        src="https://cdn2.iconfinder.com/data/icons/gconstruct/2118/gconstruct1-01.png">
+						{% if machine.status == 1 %}
+							<span class="badge badge-success">Available</span>
+						{% else %}
+							<span class="badge badge-danger">Not Available</span>
+						{% endif %}
+	</div>
+</div>	
+{% endfor %}
+</div>
+
+
+{% endblock %}
+

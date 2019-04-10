@@ -19,7 +19,7 @@ from apps.machines import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.IndexView.as_view()),
+    path('', views.HomeView.as_view()),
     path('usages/', include('apps.usages.urls')),
     path('taps/', include('apps.taps.urls')),
     path('cards/', include('apps.cards.urls')),
