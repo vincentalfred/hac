@@ -164,5 +164,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
+LOGIN_REDIRECT_URL = '/'
+#LOGOUT_REDIRECT_URL = 'accounts:logout'
 # STATIC_URL = os.environ['STATIC_URL']
 # STATIC_ROOT = os.environ['STATIC_ROOT']
