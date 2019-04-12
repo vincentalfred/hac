@@ -84,12 +84,31 @@ var energyPerType = {};
 	energyPerType['{{ machine_type.machine_type_name }}'] = new Array();
 {% endfor %}
 
+var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var prevDate = new Date(0);
 {% for dailyUsage in  dailyUsage_list %}
 	if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
+		curDate = new Date('{{ dailyUsage.date|date }}');
+		if (prevDate - new Date(0) > 0) {
+			var dif = curDate - prevDate;
+			var milliSecondsInADay = 24*3600*1000;
+			while (dif > milliSecondsInADay) {
+				prevDate = new Date(prevDate - 0 + milliSecondsInADay);
+				dateList.add(prevDate.getDate().toString()+' '
+							+month[prevDate.getMonth()]+' '
+							+(prevDate.getFullYear()-2000).toString());
+				{% for machine_type in machine_type_list %}
+					energyPerType['{{ machine_type.machine_type_name }}'].push(0);
+					timePerType['{{ machine_type.machine_type_name }}'].push(0);
+				{% endfor %}
+				dif -= milliSecondsInADay;
+			}
+		}
 		dateList.add('{{ dailyUsage.date|date:'j M y' }}');
+		prevDate = curDate;
 	}
 	energyPerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
-	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time.seconds }}/60);
+	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time }}/60);
 {% endfor %}
 
 var dataTime = {
