@@ -1,3 +1,4 @@
+<!-- templates/registration/login.html -->
 
 {% extends 'base.html' %}
 
@@ -14,11 +15,13 @@
     </ul>
   </div>
 </nav>
-<div class="login-page">
+ <div class="login-page">
     <div class="form">  
       <form class="login-form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+      	<input type="text" placeholder="username"/>
+          <input type="password" placeholder="password"/>
+       	{% csrf_token %}
+  		{{ form.as_p }}
           <button type="submit">login</button>
           <p class="message">Administrator Zone <a href="https://binusmaya.binus.ac.id/newDefault/login.html">Need Help? Please Contact Administrator</a></p>
       </form>

@@ -34,9 +34,12 @@
 					{% endif %}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					{% if  user.is_authenticated %}
 					<a class="dropdown-item" href="#">Edit Profile</a>
-					<a class="dropdown-item" href="#">Log Out</a>
-				</div>
+					<a class="dropdown-item" href={% url "accounts:logout" %}>Logout</a> 
+					{% else %}
+					<a class="dropdown-item" href={% url "accounts:login" %}>Sign In</a> 
+					{% endif %}
 			</li>
 		</ul>
 	</div>
