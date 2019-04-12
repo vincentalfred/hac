@@ -2,12 +2,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Machine, Machine_type
 
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
 	context_object_name = 'machine_list'
-
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
 		context['machine_type_list'] = Machine_type.objects.all()
@@ -17,42 +16,42 @@ class IndexView(generic.ListView):
 		return Machine.objects.all()
 
 
-class MachineDetail(generic.DetailView):
+class MachineDetail(LoginRequiredMixin, generic.DetailView):
 	model = Machine
 
 
-class MachineCreate(generic.CreateView):
+class MachineCreate(LoginRequiredMixin, generic.CreateView):
 	model = Machine
 	fields = ['machine_type', 'machine_name', 'status']
 	def get_success_url(self):
 		return reverse('machines:index')
 
 
-class MachineUpdate(generic.UpdateView):
+class MachineUpdate(LoginRequiredMixin, generic.UpdateView):
 	model = Machine
 	fields = ['machine_type', 'machine_name', 'status']
 	def get_success_url(self):
 		return reverse('machines:machine_detail', kwargs={'pk': self.object.id})
 
 
-class MachineDelete(generic.DeleteView):
+class MachineDelete(LoginRequiredMixin, generic.DeleteView):
 	model = Machine
 	def get_success_url(self):
 		return reverse('machines:index')
 
 
-class TypeDetail(generic.DetailView):
+class TypeDetail(LoginRequiredMixin, generic.DetailView):
 	model = Machine_type
 
 
-class TypeCreate(generic.CreateView):
+class TypeCreate(LoginRequiredMixin, generic.CreateView):
 	model = Machine_type
 	fields = ['machine_type_name']
 	def get_success_url(self):
 		return reverse('machines:index')
 
 
-class TypeUpdate(generic.UpdateView):
+class TypeUpdate(LoginRequiredMixin, generic.UpdateView):
 	model = Machine_type
 	fields = ['machine_type_name']
 
@@ -60,7 +59,7 @@ class TypeUpdate(generic.UpdateView):
 		return reverse('machines:type_detail', kwargs={'pk': self.object.id})
 
 
-class TypeDelete(generic.DeleteView):
+class TypeDelete(LoginRequiredMixin, generic.DeleteView):
 	model = Machine_type
 	def get_success_url(self):
 		return reverse('machines:index')

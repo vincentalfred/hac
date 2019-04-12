@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from . models import Profile
 from apps.certifications.models import Certification
@@ -16,7 +18,7 @@ from apps.machines.models import Machine_type
 # 	def get_queryset(self):
 # 		return Usages
 
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
 	template_name = 'accounts/accounts_list.html'
 	context_object_name = 'accounts_list'
 	
@@ -30,7 +32,7 @@ class LoginView(generic.ListView):
 	def get_queryset(self):
 		return Profile.objects.select_related('user')
 
-class DetailView(generic.DetailView): 
+class DetailView(LoginRequiredMixin, generic.DetailView): 
 	template_name = 'accounts/accounts_detail.html'
 	context_object_name = 'account'
 	def get_context_data(self, **kwargs):
