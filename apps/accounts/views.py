@@ -4,19 +4,19 @@ from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
+from django.shortcuts import redirect
+from django.contrib.auth.hashers import make_password
 
 
 from . models import Profile
+from . forms import UserForm, UserUpdateForm, ProfileForm
 from apps.certifications.models import Certification
 from apps.machines.models import Machine_type
 
-
-# class IndexView(generic.ListView):
-# 	template_name = 'usages/index.html'
-# 	context_object_name = ''
-
-# 	def get_queryset(self):
-# 		return Usages
 
 class IndexView(LoginRequiredMixin, generic.ListView):
 	template_name = 'accounts/accounts_list.html'
@@ -50,3 +50,66 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 	def get_queryset(self):
 		return Profile.objects.select_related('user')		
 
+@login_required
+def UserCreate(request):
+	if request.method == 'POST':
+		user_form = UserForm(request.POST)
+		profile_form = ProfileForm(request.POST)
+		if user_form.is_valid() and profile_form.is_valid():
+			
+			user = user_form.save()
+			user.refresh_from_db()
+			user.password = make_password(user_form.cleaned_data.get('password'))
+			user.profile.name = profile_form.cleaned_data.get('name')
+			user.profile.nim = profile_form.cleaned_data.get('nim')
+			user.save()
+			return redirect('accounts:index')
+	else:
+		user_form = UserForm()
+		profile_form = ProfileForm()
+	return render(request, 'accounts/accounts_signup.html', {
+		'user_form': user_form,
+		'profile_form': profile_form
+	})
+
+@login_required
+@transaction.atomic
+def UserUpdate(request, pk):
+	user = User.objects.get(pk=pk)
+	if request.method == 'POST':
+		user_form = UserUpdateForm(request.POST, instance=user)
+		profile_form = ProfileForm(request.POST, instance=user.profile)
+		if user_form.is_valid() and profile_form.is_valid():
+			user_form.save()
+			profile_form.save()
+			return redirect('accounts:index')
+		else:
+			messages.error(request, _('Please correct the error below.'))
+	else:
+		user_form = UserUpdateForm(instance=user)
+		profile_form = ProfileForm(instance=user.profile)
+	return render(request, 'accounts/accounts_form.html', {
+		'user_form': user_form,
+		'profile_form': profile_form
+	})
+
+# @login_required
+# @transaction.atomic
+# def UserUpdate(request):
+# 	if request.method == 'POST':
+# 		user_form = UserForm(request.POST, instance=request.user)
+# 		profile_form = ProfileForm(request.POST, instance=request.user.profile)
+# 		if user_form.is_valid() and profile_form.is_valid():
+# 			user_form.save()
+# 			profile_form.save()
+# 			# messages.success(request, _('Your profile was successfully updated!'))
+# 			return redirect('accounts:index')
+# 		else:
+# 			messages.error(request, _('Please correct the error below.'))
+# 	else:
+# 		user_form = UserForm(instance=request.user)
+# 		profile_form = ProfileForm(instance=request.user.profile)
+# 	return render(request, 'accounts/accounts_form.html', {
+# 		'user_form': user_form,
+# 		'profile_form': profile_form
+# 	})
