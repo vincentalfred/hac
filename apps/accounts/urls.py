@@ -11,10 +11,8 @@ urlpatterns = [
 	#path('logout/', auth_views.LogoutView.as_view(template_name='accounts/accounts_logout.html'), {'next_page': '/'}, name='logout'),
 
 	path('<int:pk>/', views.DetailView.as_view(), name='detail'), 
-	# path('add/', views.UserCreate.as_view(), name='user_add'),
 	path('add/', views.UserCreate, name='user_add'),
 	# path('edit/', views.UserUpdate, name='user_update'),
 	path('<int:pk>/edit/', views.UserUpdate, name='user_update'),
-	# path('<int:pk>/edit/', views.UserUpdate.as_view(), name='user_update'),
-	# path('<int:pk>/delete/', views.UserDelete.as_view(), name='user_delete'),	
+	path('<int:pk>/delete/', views.UserDelete.as_view(), name='user_delete'),	
 ]

@@ -37,7 +37,9 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 	context_object_name = 'account'
 	def get_context_data(self, **kwargs):
 		context = super(DetailView, self).get_context_data(**kwargs)
-		# context['certification_list'] = Certification.objects.all()
+		userview = User.objects.get(pk=self.object.user_id)
+		context['userview'] = userview
+		context['allowed_edit_delete'] = (not userview.is_staff) or (self.request.user.id == userview.id) or self.request.user.is_superuser
 		context['certification_list'] = {}
 		machine_types = Machine_type.objects.all()
 		for machine_type in machine_types:
@@ -48,7 +50,7 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 		return context
 	
 	def get_queryset(self):
-		return Profile.objects.select_related('user')		
+		return Profile.objects.select_related('user')
 
 @login_required
 def UserCreate(request):
@@ -76,7 +78,13 @@ def UserCreate(request):
 @transaction.atomic
 def UserUpdate(request, pk):
 	user = User.objects.get(pk=pk)
-	if request.method == 'POST':
+	allowed = (not user.is_staff) or (request.user.id == user.id) or request.user.is_superuser
+	if not allowed:
+		#todo
+		#ref: https://stackoverflow.com/questions/8931040/django-redirect-with-kwarg?rq=1
+		return HttpResponse("Not allowed")
+
+	elif request.method == 'POST' and allowed:
 		user_form = UserUpdateForm(request.POST, instance=user)
 		profile_form = ProfileForm(request.POST, instance=user.profile)
 		if user_form.is_valid() and profile_form.is_valid():
@@ -88,6 +96,7 @@ def UserUpdate(request, pk):
 	else:
 		user_form = UserUpdateForm(instance=user)
 		profile_form = ProfileForm(instance=user.profile)
+
 	return render(request, 'accounts/accounts_form.html', {
 		'user_form': user_form,
 		'profile_form': profile_form
@@ -113,3 +122,9 @@ def UserUpdate(request, pk):
 # 		'user_form': user_form,
 # 		'profile_form': profile_form
 # 	})
+
+class UserDelete(LoginRequiredMixin, generic.DeleteView):
+	model = User
+	template_name = 'accounts/accounts_confirm_delete.html'
+	def get_success_url(self):
+		return reverse('accounts:index')

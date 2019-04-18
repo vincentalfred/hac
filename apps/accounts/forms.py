@@ -6,12 +6,12 @@ from . models import Profile
 class UserForm(forms.ModelForm):
 	class Meta:
 		model = User
-		fields = ('email','password', 'username', )
+		fields = ('email','password', 'username', 'is_staff', )
 
 class UserUpdateForm(forms.ModelForm):
 	class Meta:
 		model = User
-		fields = ('email', 'username', )
+		fields = ('email', 'username', 'is_staff')
 
 class ProfileForm(forms.ModelForm):
 	class Meta:
