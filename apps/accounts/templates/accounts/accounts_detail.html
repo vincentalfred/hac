@@ -1,4 +1,5 @@
 {% extends 'accounts/base.html' %}
+{% load octicons %}
 
 {% block content %}
 <div class="card">
@@ -10,12 +11,30 @@
 				<td>{{ account.user_id }}</td>
 			</tr>
 			<tr>
+				<th>Username</th>
+				<td>{{ userview.username }}</td>
+			</tr>
+			<tr>
 				<th>NIM</th>
 				<td>{{ account.nim }}</td>
 			</tr>
 			<tr>	
 				<th>Name</th>
 				<td>{{ account.name }}</td>
+			</tr>
+			<tr>
+				<th>Email</th>
+				<td>{{ userview.email }}</td>
+			</tr>
+			<tr>
+				<th>Staff</th>
+				<td>
+					{% if userview.is_staff %}
+						<span class="badge badge-success">Staff</span>
+					{% else %}
+						<span class="badge badge-secondary">Not Staff</span>
+					{% endif %}
+				</td>
 			</tr>
 			<tr>
 				<th>User Access</th>
@@ -49,3 +68,42 @@
 </div>
 
 {% endblock content %}
+
+
+{% block sidebar %}
+
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Actions</h5>
+			{% if not allowed_edit_delete %}
+				<div class="alert alert-danger small" role="alert">
+					You are not allowed to edit/delete staff account.
+				</div>
+			{% endif %}
+			<table class="table {{ allowed_edit_delete|yesno:"table-hover," }}">
+				<tbody class="tbody-clickable" onclick="location.href =
+					{% if allowed_edit_delete %}
+						'{% url 'accounts:user_update' account.user_id%}'
+					{% else %}
+						'#'
+					{% endif %}
+				;">
+					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "pencil" %} Edit</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href =
+					{% if allowed_edit_delete %}
+						'{% url 'accounts:user_delete' account.user_id %}'
+					{% else %}
+						'#'
+					{% endif %}
+				;">
+					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "trashcan" %} Delete</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '#';">
+					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "telescope" %} View Usage</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock sidebar %}

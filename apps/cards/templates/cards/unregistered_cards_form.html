@@ -1,0 +1,21 @@
+{% extends 'cards/base.html' %}
+{% load octicons %}
+{% block content %}
+
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Add Card #{{ carduid }} to User</h5>
+			<form method="post">
+				{% csrf_token %}
+				Select user:
+				{% for user in users_list %}
+					<div class="radio">
+						<label><input type="radio" name="selected_user" value="{{ user.id }}" {% if selected_user.id == user.id %}checked {% endif %}> {{ user.username }}</label>
+					</div>
+				{% endfor %}
+				<button class="btn btn-hac" type="submit">Add Card</button>
+				</form>
+		</div>
+	</div>
+	
+{% endblock content %}
