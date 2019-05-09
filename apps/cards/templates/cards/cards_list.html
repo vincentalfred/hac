@@ -10,8 +10,8 @@
 			<thead>
 				<tr>
 					<th>ID</th>	
-					<th>User</th>
 					<th>CardUID</th>
+					<th>User</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -21,7 +21,7 @@
 					<td>{{ card.card_uid }}</td>
 					<td>{{ card.user }}</td>
 				</tr>
-			{% endfor %}	
+			{% endfor %}
 			</tbody>			
 		</table>
 		{% else %}
@@ -44,12 +44,14 @@
 				</tr>
 			</thead>
 			{% for unregistered_card in unregistered_cards_list %}
+			<tbody class="tbody-clickable" onclick="location.href = '{% url 'cards:card_add' unregistered_card.id%}';">
 				<tr>
 					<td>{{ unregistered_card.id }}</td>
 					<td>{{ unregistered_card.card_uid }}</td>
 					<td>{{ unregistered_card.tap_time }}</td>
 					<td>{{ unregistered_card.machine_id }}</td>
 				</tr>
+			</tbody>
 			{% endfor %}
 		</table>		
 		{% else %}
