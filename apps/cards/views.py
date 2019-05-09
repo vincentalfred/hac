@@ -24,6 +24,9 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def CardCreate(request, pk):
+	allowed = request.user.is_staff
+	if not allowed:
+		return HttpResponse("Not allowed")
 	unregistered_card = Unregistered_card.objects.get(pk=pk)
 	if request.method == 'POST':
 		carduid = unregistered_card.card_uid
@@ -36,7 +39,36 @@ def CardCreate(request, pk):
 		return redirect('cards:index')
 	else:
 		users_list = User.objects.all().order_by('username')
-	return render(request, 'cards/cards_signup.html', {
-		'unregistered_card': unregistered_card,
+	return render(request, 'cards/unregistered_cards_form.html', {
+		'carduid': unregistered_card,
 		'users_list': users_list,
 	})
+
+@login_required
+def CardUpdate(request, pk):
+	allowed = request.user.is_staff
+	if not allowed:
+		return HttpResponse("Not allowed")
+	card = Card.objects.get(pk=pk)
+	if request.method == 'POST':
+		user_id = request.POST.get("selected_user")
+		user = User.objects.get(id=user_id)
+		card.user = user
+		card.save()
+		return redirect('cards:index')
+	else:
+		users_list = User.objects.all().order_by('username')
+	return render(request, 'cards/cards_form.html', {
+		'users_list': users_list,
+		'card': card
+	})
+
+@login_required
+def CardDelete(request, pk):
+	allowed = request.user.is_staff
+	if not allowed:
+		return HttpResponse("Not allowed")
+	card = Card.objects.get(pk=pk)
+	card.delete()
+	return redirect('cards:index')
+	

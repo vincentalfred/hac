@@ -14,15 +14,15 @@
 					<th>User</th>
 				</tr>
 			</thead>
-			<tbody>
 			{% for card in cards_list %}
+			<tbody class="tbody-clickable" onclick="location.href = '{% url 'cards:card_edit' card.id%}';">
 				<tr>
 					<td>{{ card.id }}</td>
 					<td>{{ card.card_uid }}</td>
 					<td>{{ card.user }}</td>
 				</tr>
-			{% endfor %}
-			</tbody>			
+			</tbody>
+			{% endfor %}			
 		</table>
 		{% else %}
 			<span class="badge badge-secondary">No Card Registered</span>
