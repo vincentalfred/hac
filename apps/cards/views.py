@@ -27,21 +27,28 @@ def CardCreate(request, pk):
 	allowed = request.user.is_staff
 	if not allowed:
 		return HttpResponse("Not allowed")
+
+	error_message = ""
 	unregistered_card = Unregistered_card.objects.get(pk=pk)
 	if request.method == 'POST':
 		carduid = unregistered_card.card_uid
-		user_id = request.POST.get("selected_user")
-		user = User.objects.get(id=user_id)
-		unregistered_card.delete()
-		# add to card
-		card = Card(user = user, card_uid = carduid)
-		card.save()
-		return redirect('cards:index')
-	else:
-		users_list = User.objects.all().order_by('username')
+		user_id = request.POST.get("selected_user", 0)
+		if user_id != 0:
+			user = User.objects.get(id=user_id)
+			unregistered_card.delete()
+			# add to card
+			card = Card(user = user, card_uid = carduid)
+			card.save()
+			return redirect('cards:index')
+		else:
+			error_message = "No user is selected. Please select a user."
+	
+	users_list = User.objects.all().order_by('username')
 	return render(request, 'cards/unregistered_cards_form.html', {
 		'carduid': unregistered_card,
 		'users_list': users_list,
+		'error_message': error_message,
+		'test': "test",
 	})
 
 @login_required

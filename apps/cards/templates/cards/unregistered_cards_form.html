@@ -2,6 +2,13 @@
 {% load octicons %}
 {% block content %}
 
+	
+	{% if error_message != "" %}
+		<div class="alert alert-danger" role="alert">
+			<strong>Error: </strong>{{ error_message }}
+		</div>
+	{% endif %}
+
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Add Card #{{ carduid }} to User</h5>
