@@ -37,52 +37,53 @@ ALLOWED_HOSTS = [
 # Application definition
 
 PREREQUISITE_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
 ]
 
 PROJECT_APPS = [
-    'apps.accounts',
-    'apps.cards',
-    'apps.certifications',
-    'apps.machines',
-    'apps.usages',
-    'apps.taps',
-    'octicons',
+	'apps.accounts',
+	'apps.cards',
+	'apps.certifications',
+	'apps.machines',
+	'apps.usages',
+	'apps.taps',
+	'octicons',
+	'django_tables2',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'hac.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [(os.path.join(BASE_DIR, 'templates'))],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [(os.path.join(BASE_DIR, 'templates'))],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'hac.wsgi.application'
@@ -92,53 +93,61 @@ WSGI_APPLICATION = 'hac.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 if os.getenv('GAE_APPLICATION', None):
-    # Running on production App Engine, so connect to Google Cloud SQL using
-    # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
+	# Running on production App Engine, so connect to Google Cloud SQL using
+	# the unix socket at /cloudsql/<your-cloudsql-connection string>
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.mysql',
 			'HOST': os.environ['DB_HOST'],
 			# 'PORT': os.environ['DB_PORT'],
 			'NAME': os.environ['DB_NAME'],
 			'USER': os.environ['DB_USER'],
 			'PASSWORD': os.environ['DB_PASSWORD'],
-        }
-    }
+		}
+	}
 else:
-    # Running locally so connect to either a local MySQL instance or connect to
-    # Cloud SQL via the proxy. To start the proxy via command line:
-    #
-    #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
-    #
-    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-            'NAME': 'hac',
-            'USER': 'root',
-            'PASSWORD': 'root',
-        }
-    }
+	# Running locally so connect to either a local MySQL instance or connect to
+	# Cloud SQL via the proxy. To start the proxy via command line:
+	#
+	#     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
+	#
+	# See https://cloud.google.com/sql/docs/mysql-connect-proxy
+	DATABASES = {
+		# 'default': {
+		#     'ENGINE': 'django.db.backends.mysql',
+		#     'HOST': '127.0.0.1',
+		#     'PORT': '3306',
+		#     'NAME': 'hac',
+		#     'USER': 'root',
+		#     'PASSWORD': 'root',
+		# }
+		'default': {
+			'ENGINE': 'django.db.backends.mysql',
+			'HOST': os.environ['DB_HOST'],
+			'PORT': os.environ['DB_PORT'],
+			'NAME': os.environ['DB_NAME'],
+			'USER': os.environ['DB_USER'],
+			'PASSWORD': os.environ['DB_PASSWORD'],
+		  }
+	}
 
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -159,8 +168,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    # '/var/www/static/',
+	os.path.join(BASE_DIR, "static"),
+	# '/var/www/static/',
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'

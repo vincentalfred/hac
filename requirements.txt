@@ -7,3 +7,4 @@ pyjwt~=1.7.1
 google-cloud-pubsub~=0.39
 cryptography==2.5
 django-octicons~=1.0.2
+django-tables2~=2.0.6
