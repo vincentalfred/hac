@@ -1,16 +1,44 @@
 {% extends 'usages/base.html' %}
-{% load render_table from django_tables2 %}
 
 {% block content %}
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Usages</h5>
-			<canvas id="usageChart" class="mb-5"></canvas>
-			{% render_table usage_table %}
-			
+				<canvas id="usageChart" class="mb-5"></canvas>
+				
+				{% if latest_usage_list %}
+				<table id="usageTable" class="table table-hover">
+					<thead>
+						<tr>
+							<th>id</th>	
+							<th>user</th>
+							<th>machine type</th>
+							<th>machine</th>
+							<th>start</th>
+							<th>end</th>
+							<th>usage (Wh)</th>
+						</tr>
+					</thead>
+					
+					{% for usage in latest_usage_list %}
+					<tbody>
+						<tr>
+							<td>{{ usage.id }}</td>
+							<td>{{ usage.user }}</td>
+							<td>{{ usage.machine_type }}</td>
+							<td>{{ usage.machine }}</td>
+							<td>{{ usage.start_time }}</td>
+							<td>{{ usage.end_time }}</td>
+							<td>{{ usage.total_usage }}</td>
+						</tr>
+					</tbody>
+					{% endfor %}
+				</table>
+			{% else %}
+				<span class="badge badge-secondary">No Usage Registered</span>
+			{% endif %}
 		</div>
 	</div>
-
 {% endblock content %}
 
 {% block sidebar %}
@@ -136,6 +164,38 @@ function initChart() {
 }
 
 var machine_type_set = new Set();
+function reloadTable() {
+	alert("reloading table");
+	$("#usageTable").empty();
+	var markup = "<thead>"+
+					"<tr>"+
+						"<th>id</th>"+
+						"<th>user</th>"+
+						"<th>machine type</th>"+
+						"<th>machine</th>"+
+						"<th>start</th>"+
+						"<th>end</th>"+
+						"<th>usage (Wh)</th>"+
+					"</tr>"+
+				"</thead>";
+	$("#usageTable").append(markup);
+	{% for usage in latest_usage_list %}
+		if (machine_type_set.has("{{ usage.machine_type }}")) {
+			markup = "<tbody>"+
+						"<tr>"+
+							"<td>{{ usage.id }}</td>"+
+							"<td>{{ usage.user }}</td>"+
+							"<td>{{ usage.machine_type }}</td>"+
+							"<td>{{ usage.machine }}</td>"+
+							"<td>{{ usage.start_time }}</td>"+
+							"<td>{{ usage.end_time }}</td>"+
+							"<td>{{ usage.total_usage }}</td>"+
+						"</tr>"+
+					"</tbody>";
+			$("#usageTable").append(markup);
+		}
+	{% endfor %}
+}
 
 $(document).ready(function(){
 	{% if machine_type_list %}

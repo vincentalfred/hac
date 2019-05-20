@@ -1,42 +1,12 @@
 {% extends 'usages/base.html' %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Usages</h5>
-				<canvas id="usageChart" class="mb-5"></canvas>
-				
-				{% if latest_usage_list %}
-				<table id="usageTable" class="table table-hover">
-					<thead>
-						<tr>
-							<th>id</th>	
-							<th>user</th>
-							<th>machine type</th>
-							<th>machine</th>
-							<th>start</th>
-							<th>end</th>
-							<th>usage (Wh)</th>
-						</tr>
-					</thead>
-					
-					{% for usage in latest_usage_list %}
-					<tbody>
-						<tr>
-							<td>{{ usage.id }}</td>
-							<td>{{ usage.user }}</td>
-							<td>{{ usage.machine_type }}</td>
-							<td>{{ usage.machine }}</td>
-							<td>{{ usage.start_time }}</td>
-							<td>{{ usage.end_time }}</td>
-							<td>{{ usage.total_usage }}</td>
-						</tr>
-					</tbody>
-					{% endfor %}
-				</table>
-			{% else %}
-				<span class="badge badge-secondary">No Usage Registered</span>
-			{% endif %}
+			<canvas id="usageChart" class="mb-5"></canvas>
+			{% render_table usage_table %}
 		</div>
 	</div>
 {% endblock content %}
@@ -51,7 +21,6 @@
 			<div class="radio">
 				<label><input id="energyChartRadio" type="radio" name="chartRadio" value="energy">Energy Usage</label>
 			</div>
-			
 		</div>
 	</div>
 	<div class="card">
@@ -86,10 +55,11 @@ var energyPerType = {};
 
 var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var prevDate = new Date(0);
-{% for dailyUsage in  dailyUsage_list %}
+
+{% for dailyUsage in dailyUsage_list %}
 	if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
-		curDate = new Date('{{ dailyUsage.date|date }}');
-		if (prevDate - new Date(0) > 0) {
+		curDate = new Date('{{ dailyUsage.date|date:'j M y' }}');
+		if (prevDate - (new Date(0)) > 0) {
 			var dif = curDate - prevDate;
 			var milliSecondsInADay = 24*3600*1000;
 			while (dif > milliSecondsInADay) {
@@ -105,10 +75,15 @@ var prevDate = new Date(0);
 			}
 		}
 		dateList.add('{{ dailyUsage.date|date:'j M y' }}');
+		{% for machine_type in machine_type_list %}
+			energyPerType['{{ machine_type.machine_type_name }}'].push(0);
+			timePerType['{{ machine_type.machine_type_name }}'].push(0);
+		{% endfor %}
 		prevDate = curDate;
 	}
-	energyPerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_usage }});
-	timePerType['{{ dailyUsage.machine_type }}'].push({{ dailyUsage.total_time }}/60);
+	var lastIdx = energyPerType['{{ dailyUsage.machine_type }}'].length - 1;
+	energyPerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_usage }};
+	timePerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_time }}/60;
 {% endfor %}
 
 var dataTime = {
@@ -164,38 +139,6 @@ function initChart() {
 }
 
 var machine_type_set = new Set();
-function reloadTable() {
-	alert("reloading table");
-	$("#usageTable").empty();
-	var markup = "<thead>"+
-					"<tr>"+
-						"<th>id</th>"+
-						"<th>user</th>"+
-						"<th>machine type</th>"+
-						"<th>machine</th>"+
-						"<th>start</th>"+
-						"<th>end</th>"+
-						"<th>usage (Wh)</th>"+
-					"</tr>"+
-				"</thead>";
-	$("#usageTable").append(markup);
-	{% for usage in latest_usage_list %}
-		if (machine_type_set.has("{{ usage.machine_type }}")) {
-			markup = "<tbody>"+
-						"<tr>"+
-							"<td>{{ usage.id }}</td>"+
-							"<td>{{ usage.user }}</td>"+
-							"<td>{{ usage.machine_type }}</td>"+
-							"<td>{{ usage.machine }}</td>"+
-							"<td>{{ usage.start_time }}</td>"+
-							"<td>{{ usage.end_time }}</td>"+
-							"<td>{{ usage.total_usage }}</td>"+
-						"</tr>"+
-					"</tbody>";
-			$("#usageTable").append(markup);
-		}
-	{% endfor %}
-}
 
 $(document).ready(function(){
 	{% if machine_type_list %}

@@ -11,6 +11,7 @@ from apps.machines.models import Machine_type
 
 class IndexView(LoginRequiredMixin, generic.ListView):
 	context_object_name = 'latest_usage_list'
+	template_name = 'usages/usage_list_old.html'
 	
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
@@ -30,9 +31,7 @@ def DetailView(request):
 	machine_type_list = Machine_type.objects.all()
 	dailyUsage_list = DailyUsage.objects.all()
 
-	
-	return render(request, 'usages/usage_list_2.html', {
-		# 'latest_usage_list': latest_usage_list,
+	return render(request, 'usages/usage_list.html', {
 		'usage_table': usage_table,
 		'machine_type_list': machine_type_list,
 		'dailyUsage_list': dailyUsage_list,
