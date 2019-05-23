@@ -43,7 +43,8 @@
 var ctx = document.getElementById('usageChart');
 var usageChart;
 var dataType="time";
-var color = ['#f2bd2b', '#ed6307', '#ed0766', '#a007ed'];
+{# var color = ['#ed6307', '#ed0766', '#a007ed', '#f2bd2b']; #}
+var color = ['#1456c9', '#ffc119', '#15a344'];
 
 var dateList = new Set();
 var timePerType = {};
@@ -92,7 +93,7 @@ var dataTime = {
 		{% for machine_type in machine_type_list %}
 			{
 				label: '{{ machine_type.machine_type_name }}',
-				backgroundColor: color[{{ machine_type.id }}%4],
+				backgroundColor: color[({{ machine_type.id }}-1)%4],
 				data: timePerType['{{ machine_type.machine_type_name }}'],
 			},
 		{% endfor %}
@@ -104,7 +105,7 @@ var dataEnergy = {
 		{% for machine_type in machine_type_list %}
 			{
 				label: '{{ machine_type.machine_type_name }}',
-				backgroundColor: color[{{ machine_type.id }}%4],
+				backgroundColor: color[({{ machine_type.id }}-1)%4],
 				data: energyPerType['{{ machine_type.machine_type_name }}'],
 			},
 		{% endfor %}
@@ -114,8 +115,8 @@ var chartOptions = {
 	responsive: true,
 	scales: {
 		xAxes: [{
-			barPercentage: 1.0,
-			barThickness: 16,
+			barPercentage: 0.9,
+			barThickness: 12,
 			maxBarThickness: 24,
 			stacked: true,
 		}],

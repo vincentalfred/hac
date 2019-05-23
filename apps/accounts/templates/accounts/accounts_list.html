@@ -8,7 +8,8 @@
 		{% if accounts_list %}
 		<table class="table table-hover">
 			<tr>
-				<th>User</th>
+				<th>#</th>
+				<th>Username</th>
 				<th>NIM</th>
 				<th>Name</th>
 			</tr>
@@ -16,6 +17,7 @@
 			<tbody class="tbody-clickable" onclick="location.href = '{{ account.user_id }}';">
 			<tr>
 				<td>{{ account.user_id }}</td>
+				<td>{{ account.user }}</td>
 				<td>{{ account.nim }}</td>
 				<td>{{ account.name }}</td>
 			</tr>

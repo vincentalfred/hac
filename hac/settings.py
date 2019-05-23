@@ -113,22 +113,22 @@ else:
 	#
 	# See https://cloud.google.com/sql/docs/mysql-connect-proxy
 	DATABASES = {
-		# 'default': {
-		#     'ENGINE': 'django.db.backends.mysql',
-		#     'HOST': '127.0.0.1',
-		#     'PORT': '3306',
-		#     'NAME': 'hac',
-		#     'USER': 'root',
-		#     'PASSWORD': 'root',
-		# }
 		'default': {
-			'ENGINE': 'django.db.backends.mysql',
-			'HOST': os.environ['DB_HOST'],
-			'PORT': os.environ['DB_PORT'],
-			'NAME': os.environ['DB_NAME'],
-			'USER': os.environ['DB_USER'],
-			'PASSWORD': os.environ['DB_PASSWORD'],
-		  }
+		    'ENGINE': 'django.db.backends.mysql',
+		    'HOST': '127.0.0.1',
+		    'PORT': '3306',
+		    'NAME': 'hac',
+		    'USER': 'root',
+		    'PASSWORD': 'root',
+		}
+		# 'default': {
+		# 	'ENGINE': 'django.db.backends.mysql',
+		# 	'HOST': os.environ['DB_HOST'],
+		# 	'PORT': os.environ['DB_PORT'],
+		# 	'NAME': os.environ['DB_NAME'],
+		# 	'USER': os.environ['DB_USER'],
+		# 	'PASSWORD': os.environ['DB_PASSWORD'],
+		# }
 	}
 
 
