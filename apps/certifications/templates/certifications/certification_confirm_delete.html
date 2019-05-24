@@ -1,0 +1,11 @@
+{% extends "certifications/base.html" %}
+
+{% block content %}
+
+<form method="post">
+	{% csrf_token %}
+    <p>Are you sure you want to delete "<strong>{{ certification.user|title }}</strong>'s certification for <strong>{{ certification.machine_type|title }}</strong>"?</p>
+    <input type="submit" value="Confirm">
+</form>
+
+{% endblock content %}

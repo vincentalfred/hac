@@ -1,0 +1,40 @@
+{% extends 'certifications/base.html' %}
+{% load octicons %}
+
+{% block content %}
+<div class="card">
+	<div class="card-body"> 
+		<h5 class="card-title">Certifications</h5>
+		<table class="table">
+			<tr>
+				<th>User</th>
+				<td>{{ certification.user }}</td>
+			</tr>
+			<tr>
+				<th>Machine Type</th>
+				<td>{{ certification.machine_type }}</td>
+			</tr>
+		</table>
+	</div>	
+</div>
+
+{% endblock content %}
+
+
+{% block sidebar %}
+
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Actions</h5>
+			<table class="table {{ allowed_edit_delete|yesno:"table-hover," }}">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'certifications:certification_update' certification.id %}';">
+					<tr><td>{% octicon "pencil" %} Edit</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'certifications:certification_delete' certification.id %}';">
+					<tr><td>{% octicon "trashcan" %} Delete</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock sidebar %}
