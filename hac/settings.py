@@ -54,6 +54,7 @@ PROJECT_APPS = [
 	'apps.taps',
 	'octicons',
 	'django_tables2',
+	'tempus_dominus',
 ]
 
 INSTALLED_APPS = PREREQUISITE_APPS + PROJECT_APPS
