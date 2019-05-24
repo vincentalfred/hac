@@ -4,8 +4,10 @@
 
 <form method="post">
 	{% csrf_token %}
-	{{ user_form.as_p }}
-	{{ profile_form.as_p }}
+	<table>
+		{{ user_form.as_table }}
+		{{ certification_form.as_table }}
+	</table>
 	<input type="submit" value="Save">
 </form>
 
