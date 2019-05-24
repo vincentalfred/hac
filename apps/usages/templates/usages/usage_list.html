@@ -25,15 +25,17 @@
 	</div>
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">Filter</h5>
-				{% if machine_type_list %}
-					{% for machine_type in machine_type_list %}
-						<button id="{{ machine_type.id }}" class="btn btn-hac mr-1 mb-1">{{ machine_type.machine_type_name }}</button>
-					{% endfor %}
-				{% else %}
-					<span class="badge badge-secondary">No Machine Type Registered</span>
-				{% endif %}
-				
+			<h5 class="card-title">Date Picker</h5>
+			{{ start_time }}
+			{{ end_time }}
+			{{ form.media }}
+
+
+			<form method="post" action=".">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button class="btn btn-hac" type="submit">View</button>
+			</form>
 		</div>
 	</div>
 {% endblock sidebar %}
