@@ -30,35 +30,54 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 		# return Usage.objects.latest('start_time')
 
 def DetailView(request):
-	if request.method == 'POST': 
-		form = MyForm(request.POST)
-		if form.is_valid():
-			start_time = form.cleaned_data['start_date_field']
-			end_time = form.cleaned_data['end_date_field']
-			end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
-			dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
+	if request.user.is_authenticated: 
+		if request.method == 'POST': 
+			form = MyForm(request.POST)
+			if form.is_valid():
+				start_time = form.cleaned_data['start_date_field']
+				end_time = form.cleaned_data['end_date_field']
+				end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
+				dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
+				usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]))
+				RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
+				machine_type_list = Machine_type.objects.all()
+				
+		else:
+			form = MyForm()
+			start_time = (timezone.now() + timezone.timedelta(days=-7))
+			end_time = timezone.now()
 			usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]))
 			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 			machine_type_list = Machine_type.objects.all()
+			dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
+	
+		return render(request, 'usages/usage_list.html', {
+			'usage_table': usage_table,
+			'machine_type_list': machine_type_list,
+			'dailyUsage_list': dailyUsage_list,
+			'form': form,
+		})
+
+	else: 
+		if request.method == 'POST': 
+			form = MyForm(request.POST)
+			if form.is_valid():
+				start_time = form.cleaned_data['start_date_field']
+				end_time = form.cleaned_data['end_date_field']
+				end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
+				dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
+				machine_type_list = Machine_type.objects.all()
+		else:
+			form = MyForm()
+			start_time = (timezone.now() + timezone.timedelta(days=-7))
+			end_time = timezone.now()
+			machine_type_list = Machine_type.objects.all()
+			dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
 			
-	else:
-		form = MyForm()
-		start_time = (timezone.now() + timezone.timedelta(days=-7))
-		end_time = timezone.now()
-		usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]))
-		RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
-		machine_type_list = Machine_type.objects.all()
-		dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
-		
-
-		
-	return render(request, 'usages/usage_list.html', {
-		'usage_table': usage_table,
-		'machine_type_list': machine_type_list,
-		'dailyUsage_list': dailyUsage_list,
-		'form': form,
-	})
-
-
+		return render(request, 'usages/usage_list_normal.html', {
+			'machine_type_list': machine_type_list,
+			'dailyUsage_list': dailyUsage_list,
+			'form': form,
+		})
 
 
