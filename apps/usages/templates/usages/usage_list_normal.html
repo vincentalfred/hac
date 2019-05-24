@@ -1,0 +1,187 @@
+{% extends 'usages/base.html' %}
+
+
+{% block content %}
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Usages</h5>
+			<canvas id="usageChart" class="mb-5"></canvas>
+			
+		</div>
+	</div>
+{% endblock content %}
+
+{% block sidebar %}
+	<div class="card mb-5">
+		<div class="card-body">
+			<h5 class="card-title">Chart Type</h5>
+			<div class="radio">
+				<label><input id="timeChartRadio" type="radio" name="chartRadio" value="time"checked>Time Usage</label>
+			</div>
+			<div class="radio">
+				<label><input id="energyChartRadio" type="radio" name="chartRadio" value="energy">Energy Usage</label>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Date Picker</h5>
+			{{ start_time }}
+			{{ end_time }}
+			{{ form.media }}
+
+
+			<form method="post" action=".">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button class="btn btn-hac" type="submit">View</button>
+			</form>
+		</div>
+	</div>
+{% endblock sidebar %}
+
+{% block javascript %}
+
+var ctx = document.getElementById('usageChart');
+var usageChart;
+var dataType="time";
+{# var color = ['#ed6307', '#ed0766', '#a007ed', '#f2bd2b']; #}
+var color = ['#1456c9', '#ffc119', '#15a344'];
+
+var dateList = new Set();
+var timePerType = {};
+var energyPerType = {};
+{% for machine_type in machine_type_list %}
+	timePerType['{{ machine_type.machine_type_name }}'] = new Array();
+	energyPerType['{{ machine_type.machine_type_name }}'] = new Array();
+{% endfor %}
+
+var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var prevDate = new Date(0);
+
+{% for dailyUsage in dailyUsage_list %}
+	if (!dateList.has('{{ dailyUsage.date|date:'j M y' }}')) {
+		curDate = new Date('{{ dailyUsage.date|date:'j M y' }}');
+		if (prevDate - (new Date(0)) > 0) {
+			var dif = curDate - prevDate;
+			var milliSecondsInADay = 24*3600*1000;
+			while (dif > milliSecondsInADay) {
+				prevDate = new Date(prevDate - 0 + milliSecondsInADay);
+				dateList.add(prevDate.getDate().toString()+' '
+							+month[prevDate.getMonth()]+' '
+							+(prevDate.getFullYear()-2000).toString());
+				{% for machine_type in machine_type_list %}
+					energyPerType['{{ machine_type.machine_type_name }}'].push(0);
+					timePerType['{{ machine_type.machine_type_name }}'].push(0);
+				{% endfor %}
+				dif -= milliSecondsInADay;
+			}
+		}
+		dateList.add('{{ dailyUsage.date|date:'j M y' }}');
+		{% for machine_type in machine_type_list %}
+			energyPerType['{{ machine_type.machine_type_name }}'].push(0);
+			timePerType['{{ machine_type.machine_type_name }}'].push(0);
+		{% endfor %}
+		prevDate = curDate;
+	}
+	var lastIdx = energyPerType['{{ dailyUsage.machine_type }}'].length - 1;
+	energyPerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_usage }};
+	timePerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_time }}/60;
+{% endfor %}
+
+var dataTime = {
+	labels: Array.from(dateList),
+	datasets: [
+		{% for machine_type in machine_type_list %}
+			{
+				label: '{{ machine_type.machine_type_name }}',
+				backgroundColor: color[({{ machine_type.id }}-1)%4],
+				data: timePerType['{{ machine_type.machine_type_name }}'],
+			},
+		{% endfor %}
+	],
+};
+var dataEnergy = {
+	labels: Array.from(dateList),
+	datasets: [
+		{% for machine_type in machine_type_list %}
+			{
+				label: '{{ machine_type.machine_type_name }}',
+				backgroundColor: color[({{ machine_type.id }}-1)%4],
+				data: energyPerType['{{ machine_type.machine_type_name }}'],
+			},
+		{% endfor %}
+	],
+};
+var chartOptions = {
+	responsive: true,
+	scales: {
+		xAxes: [{
+			barPercentage: 0.9,
+			barThickness: 12,
+			maxBarThickness: 24,
+			stacked: true,
+		}],
+		yAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: "Time (Minutes)",
+			},
+			stacked: true,
+		}]
+	},
+};
+
+function initChart() {
+	var chartData = dataType=="time"? dataTime : dataEnergy;
+	usageChart = new Chart(ctx, {
+		type: 'bar',
+		data: chartData,
+		options: chartOptions,
+	});
+}
+
+var machine_type_set = new Set();
+
+$(document).ready(function(){
+	{% if machine_type_list %}
+		{% for machine_type in machine_type_list %}
+			machine_type_set.add("{{ machine_type.machine_type_name }}");
+			$("#{{ machine_type.id }}").click(function(){
+				if ($("#{{ machine_type.id }}").hasClass("btn-hac")) {
+					$("#{{ machine_type.id }}").removeClass("btn-hac").addClass("btn-outline-hac");
+					if (machine_type_set.has("{{ machine_type.machine_type_name }}")) 
+						machine_type_set.delete("{{ machine_type.machine_type_name }}");
+				}
+				else {
+					$("#{{ machine_type.id }}").removeClass("btn-outline-hac").addClass("btn-hac");
+					if (!machine_type_set.has("{{ machine_type.machine_type_name }}")) 
+						machine_type_set.add("{{ machine_type.machine_type_name }}");
+				}
+				reloadTable();
+			});
+		{% endfor %}
+	{% endif %}
+
+	$('#timeChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			usageChart.destroy();
+			chartOptions.scales.yAxes[0].scaleLabel.labelString = "Time (Minutes)";
+			initChart();
+		}
+	});
+	$('#energyChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			usageChart.destroy();
+			chartOptions.scales.yAxes[0].scaleLabel.labelString = "Energy (Wh)";
+			initChart();
+		}
+	});
+	
+	initChart();
+
+});
+
+{% endblock javascript %}
