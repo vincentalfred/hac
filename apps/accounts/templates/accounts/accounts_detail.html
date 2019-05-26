@@ -4,10 +4,10 @@
 {% block content %}
 <div class="card">
 	<div class="card-body"> 
-		<h5 class="card-title">User</h5>
+		<h5 class="card-title">{{ account.name|title }}'s Detail</h5>
 		<table class="table">
 			<tr>
-				<th>User</th>
+				<th>ID</th>
 				<td>{{ account.user_id }}</td>
 			</tr>
 			<tr>
@@ -37,7 +37,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>User Access</th>
+				<th>{{ userview.username|title }}'s Access</th>
 				<td>
 					<table>
 						<thead>
@@ -101,6 +101,9 @@
 				</tbody>
 				<tbody class="tbody-clickable" onclick="location.href = '#';">
 					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "telescope" %} View Usage</td></tr>
+				</tbody>
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'certifications:certification_user_update' account.user_id %}';">
+					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "verified" %} Edit Access</td></tr>
 				</tbody>
 			</table>
 		</div>

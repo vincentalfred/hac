@@ -2,10 +2,10 @@
 {% load octicons %}
 
 {% block content %}
-{{ certification_list }}
+{# {{ certification_list }} #}
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title">User Certifications</h5>
+		<h5 class="card-title">{{ user.name|title }}'s Certifications</h5>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -14,18 +14,16 @@
 					<th>Certification Status</th>
 				</tr>
 			</thead>
-			{% for machine_type in machine_types %}
-			<tbody class="tbody-clickable" onclick="location.href = '#';">
+			{% for machine_type, certification in certification_list.items %}
+			<tbody class="tbody-clickable" onclick="location.href = '{% url 'certifications:certification_detail' certification.certification_id%}';">
 				<tr>
-					<td>{{ machine_type.id }}</td>
-					<td>{{ machine_type.machine_type_name }}</td>
-					<td>{{ certification_list.(machine_type.machine_type_name)|yesno:"yes, no, none" }}</td>
+					<td>{{ certification.machine_type_id }}</td>
+					<td>{{ machine_type }}</td>
+					<td>{{ certification.certified }}</td>
 				</tr>
 			</tbody>
 			{% endfor %}
 		</table>
-		
-		<a href="{% url "certifications:certification_add" %}">{% octicon "plus" %} Add New Certification</a>
 		
 	</div>
 </div>

@@ -1,0 +1,22 @@
+{% extends "certifications/base.html" %}
+
+{% block content %}
+
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">{{ profile.name|title }} is certified to use:</h5>
+		<form method="post">
+			{% csrf_token %}
+			{% for machine_type, certification in  certification_list.items %}
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" value="{{ machine_type }}" name="certification_checkbox" {{ certification.certified|yesno:"checked," }}>
+					{{ machine_type }}
+				</div>
+			{% endfor %}
+			<input type="submit" value="Save" class="btn btn-hac mt-2">
+		</form>
+	</div>
+</div>
+
+
+{% endblock content %}

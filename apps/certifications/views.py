@@ -1,11 +1,13 @@
 from django.shortcuts import render
-from django.views import generic
+from django.views import generic, View
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 
 from . models import Certification
 from apps.machines.models import Machine, Machine_type
+from apps.accounts.models import Profile
+from django.contrib.auth.models import User
 
 class IndexView(LoginRequiredMixin, generic.ListView):
 	context_object_name = 'certification_list'
@@ -33,18 +35,96 @@ class CertificationDelete(LoginRequiredMixin, generic.DeleteView):
 		return reverse('certifications:index')
 
 class CertificationUserList(LoginRequiredMixin, generic.ListView):
-	template_name = 'certifications/certification_user_list.html'
-	context_object_name = 'machine_types'
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['certification_list'] = {}
+	def get(self, request, **kwargs):
+		user = Profile.objects.get(id=self.kwargs['user_id'])
+		certification_list = {}
 		machine_types = Machine_type.objects.all()
 		for machine_type in machine_types:
 			if Certification.objects.filter(user = self.kwargs['user_id'] ,machine_type = machine_type).exists():
-				context['certification_list'][machine_type.machine_type_name] = True
+				certification = Certification.objects.get(user = self.kwargs['user_id'], machine_type = machine_type)
+				certification_list[machine_type.machine_type_name] = {
+					'certified': True,
+					'machine_type_id': machine_type.id,
+					'certification_id': certification.id,
+				}
 			else:
-				context['certification_list'][machine_type.machine_type_name] = False
-		return context
-	def get_queryset(self, *args, **kwargs):
-		return Machine_type.objects.all()
+				certification_list[machine_type.machine_type_name] = {
+					'certified': False,
+					'machine_type_id': machine_type.id,
+					'certification_id': 0,
+				}
+
+		return render(request, 'certifications/certification_user_list.html', {
+			'user': user,
+			'certification_list': certification_list,
+		})
+
+class CertificationUserUpdate(LoginRequiredMixin, View):
+	def get(self, request, *args, **kwargs):
+		profile = Profile.objects.get(id=self.kwargs['user_id'])
+		certification_list = {}
+		machine_types = Machine_type.objects.all()
+		for machine_type in machine_types:
+			if Certification.objects.filter(user = self.kwargs['user_id'] ,machine_type = machine_type).exists():
+				certification = Certification.objects.get(user = self.kwargs['user_id'], machine_type = machine_type)
+				certification_list[machine_type.machine_type_name] = {
+					'certified': True,
+					'machine_type_id': machine_type.id,
+					'certification_id': certification.id,
+				}
+			else:
+				certification_list[machine_type.machine_type_name] = {
+					'certified': False,
+					'machine_type_id': machine_type.id,
+					'certification_id': 0,
+				}
+
+		return render(request, 'certifications/certification_user_form.html', {
+			'profile': profile,
+			'certification_list': certification_list,
+		})
+
+	def post(self, request, *args, **kwargs):
+		certification_checkbox = request.POST.getlist('certification_checkbox')
+		user = User.objects.get(id=self.kwargs['user_id'])
+		profile = Profile.objects.get(id=self.kwargs['user_id'])
+		certification_list = {}
+		machine_types = Machine_type.objects.all()
+		for machine_type in machine_types:
+			if Certification.objects.filter(user = self.kwargs['user_id'] ,machine_type = machine_type).exists():
+				if machine_type.machine_type_name in certification_checkbox:
+					certification = Certification.objects.get(user = self.kwargs['user_id'], machine_type = machine_type)
+					certification_list[machine_type.machine_type_name] = {
+						'certified': True,
+						'machine_type_id': machine_type.id,
+						'certification_id': certification.id,
+					}
+				else:
+					Certification.objects.filter(user = self.kwargs['user_id'], machine_type = machine_type).delete()
+					certification_list[machine_type.machine_type_name] = {
+						'certified': False,
+						'machine_type_id': machine_type.id,
+						'certification_id': 0,
+					}
+			else:
+				if machine_type.machine_type_name in certification_checkbox:
+					certification = Certification.objects.create(user = user, machine_type = machine_type)
+					certification_list[machine_type.machine_type_name] = {
+						'certified': True,
+						'machine_type_id': machine_type.id,
+						'certification_id': certification.id,
+					}
+				else:
+					certification_list[machine_type.machine_type_name] = {
+						'certified': False,
+						'machine_type_id': machine_type.id,
+						'certification_id': 0,
+					}
+
+		return HttpResponseRedirect(reverse('accounts:detail', kwargs={'pk':user.id}))
+		
+		# return render(request, 'certifications/certification_user_form.html', {
+		# 	'profile': profile,
+		# 	'certification_list': certification_list,
+		# 	'certification_checkbox': certification_checkbox,
+		# })

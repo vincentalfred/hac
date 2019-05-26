@@ -16,7 +16,7 @@
 				</tr>
 			</thead>
 			{% for machine in machine_list %}
-			<tbody class="tbody-clickable" onclick="location.href = '{{ machine.id }}';">
+			<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_detail' machine.id %}';">
 				<tr>
 					<td>{{ machine.id }}</td>
 					<td>{{ machine.machine_name }}</td>
