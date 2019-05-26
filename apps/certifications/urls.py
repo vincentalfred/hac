@@ -10,4 +10,5 @@ urlpatterns = [
 	path('<int:pk>/delete/', views.CertificationDelete.as_view(), name='certification_delete'),
 
 	path('users/<int:user_id>/', views.CertificationUserList.as_view(), name='certification_user_list'),
+	path('users/<int:user_id>/edit/', views.CertificationUserUpdate.as_view(), name='certification_user_update'),
 ]
