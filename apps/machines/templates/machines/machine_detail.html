@@ -45,7 +45,7 @@
 				<tbody class="tbody-clickable" onclick="location.href = '{% url 'machines:machine_delete' machine.id%}';">
 					<tr><td>{% octicon "trashcan" %} Delete</td></tr>
 				</tbody>
-				<tbody class="tbody-clickable" onclick="location.href = '#';">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url 'usages:usages_machine' machine.id %}';">
 					<tr><td>{% octicon "telescope" %} View Usage</td></tr>
 				</tbody>
 			</table>
