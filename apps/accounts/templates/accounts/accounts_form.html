@@ -6,9 +6,10 @@
 	{% csrf_token %}
 	<table>
 		{{ user_form.as_table }}
-		{{ certification_form.as_table }}
+		{{ profile_form.as_table }}
 	</table>
-	<input type="submit" value="Save">
+	{# <input type="submit" value="Save"> #}
+	<button class="btn btn-hac" type="submit">Save</button>
 </form>
 
 {% endblock content %}

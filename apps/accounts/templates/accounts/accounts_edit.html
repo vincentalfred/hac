@@ -1,0 +1,18 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Edit Profile</h5>
+			<form method="post">
+				{% csrf_token %}
+				{{ user_form.as_p }}
+				{{ profile_form.as_p }}
+				<button class="btn btn-hac" type="submit">Sign up</button>
+				</form>
+		</div>
+	</div>
+	
+
+{% endblock %}
