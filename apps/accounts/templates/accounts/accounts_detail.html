@@ -99,7 +99,7 @@
 				;">
 					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "trashcan" %} Delete</td></tr>
 				</tbody>
-				<tbody class="tbody-clickable" onclick="location.href = '#';">
+				<tbody class="tbody-clickable" onclick="location.href = '{% url "usages:usages_user" account.user_id %}';">
 					<tr class="{{ allowed_edit_delete|yesno:",table-dark" }}"><td>{% octicon "telescope" %} View Usage</td></tr>
 				</tbody>
 				<tbody class="tbody-clickable" onclick="location.href = '{% url 'certifications:certification_user_update' account.user_id %}';">
