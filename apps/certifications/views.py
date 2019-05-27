@@ -128,3 +128,75 @@ class CertificationUserUpdate(LoginRequiredMixin, View):
 		# 	'certification_list': certification_list,
 		# 	'certification_checkbox': certification_checkbox,
 		# })
+
+class CertificationMachineUpdate(LoginRequiredMixin, View):
+	def get(self, request, *args, **kwargs):
+		machine_type = Machine_type.objects.get(id=self.kwargs['machine_type_id'])
+		certification_list = {}
+		profiles = Profile.objects.all()
+		for profile in profiles:
+			if Certification.objects.filter(user = profile.user, machine_type = self.kwargs['machine_type_id']).exists():
+				certification = Certification.objects.get(user = profile.user, machine_type = self.kwargs['machine_type_id'])
+				certification_list[profile.user.id] = {
+					'certified': True,
+					'certification_id': certification.id,
+					'profile': profile,
+				}
+			else:
+				certification_list[profile.user.id] = {
+					'certified': False,
+					'certification_id': 0,
+					'profile': profile,
+				}
+
+		return render(request, 'certifications/certification_machine_type_form.html', {
+			'machine_type': machine_type,
+			'certification_list': certification_list,
+		})
+
+	def post(self, request, *args, **kwargs):
+		certification_checkbox = request.POST.getlist('certification_checkbox')
+		machine_type = Machine_type.objects.get(id=self.kwargs['machine_type_id'])
+		certification_updated = 0
+
+		certification_list = {}
+		profiles = Profile.objects.all()
+		for profile in profiles:
+			if Certification.objects.filter(user = profile.user, machine_type = machine_type).exists():
+				if str(profile.user.id) in certification_checkbox:
+					certification = Certification.objects.get(user = profile.user, machine_type = machine_type)
+					certification_list[profile.user.id] = {
+						'certified': True,
+						'certification_id': certification.id,
+						'profile': profile,
+					}
+				else:
+					Certification.objects.filter(user = profile.user, machine_type = machine_type).delete()
+					certification_list[profile.user.id] = {
+						'certified': False,
+						'certification_id': 0,
+						'profile': profile,
+					}
+					certification_updated = 1
+			else:
+				if str(profile.user.id) in certification_checkbox:
+					certification = Certification.objects.create(user = profile.user, machine_type = machine_type)
+					certification_list[profile.user.id] = {
+						'certified': True,
+						'certification_id': certification.id,
+						'profile': profile,
+					}
+					certification_updated = 1
+				else:
+					certification_list[profile.user.id] = {
+						'certified': False,
+						'certification_id': 0,
+						'profile': profile,
+					}
+		
+		return render(request, 'certifications/certification_machine_type_form.html', {
+			'machine_type': machine_type,
+			'certification_list': certification_list,
+			# 'certification_checkbox': certification_checkbox,
+			'certification_updated': certification_updated,
+		})

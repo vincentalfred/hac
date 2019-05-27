@@ -1,0 +1,38 @@
+{% extends "certifications/base_machine.html" %}
+
+{% block content %}
+
+<div class="card">
+	<div class="card-body">
+		{% if certification_updated %}
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Success!</strong> Certifications updated.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		{% endif %}
+		<h5 class="card-title">{{ machine_type.machine_type_name|title }} is certified to be used by:</h5>
+		{{ certification_checkbox }}
+		<form method="post">
+			{% csrf_token %}
+			<table class="table">
+				<thead>
+					<th></th>
+					<th>Name</th>
+					<th>NIM</th>
+				</thead>
+				{% for user_id, certification in certification_list.items %}
+					<tr>
+						<td><input type="checkbox" value="{{ user_id }}" name="certification_checkbox" {{ certification.certified|yesno:"checked," }}></td>
+						<td>{{ certification.profile.name|title }}</td>
+						<td>{{ certification.profile.nim }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+			<input type="submit" value="Save" class="btn btn-hac mt-2">
+		</form>
+	</div>
+</div>
+
+{% endblock content %}
