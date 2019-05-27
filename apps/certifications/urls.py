@@ -11,4 +11,6 @@ urlpatterns = [
 
 	path('users/<int:user_id>/', views.CertificationUserList.as_view(), name='certification_user_list'),
 	path('users/<int:user_id>/edit/', views.CertificationUserUpdate.as_view(), name='certification_user_update'),
+
+	path('machine-type/<int:machine_type_id>/edit/', views.CertificationMachineUpdate.as_view(), name='certification_machine_type_update'),
 ]
