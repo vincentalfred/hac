@@ -36,11 +36,10 @@ class LoginView(generic.ListView):
 	def get_queryset(self):
 		return Profile.objects.select_related('user')
 
-class DetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView, TemplateView): 
+class DetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView): 
 	template_name = 'accounts/accounts_detail.html'
 	context_object_name = 'account'
 	permission_required = 'self.request.user.id == userview.id'
-
 
 	def get_context_data(self, **kwargs):
 		context = super(DetailView, self).get_context_data(**kwargs)

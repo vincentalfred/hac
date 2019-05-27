@@ -21,4 +21,5 @@ class ProfileForm(forms.ModelForm):
 class SelfUserForm(forms.ModelForm):
 	class Meta:
 		model = User
-		fields = ('email','password', 'username')
+		# fields = ('email','password', 'username')
+		fields = ('email', 'username')
