@@ -17,3 +17,8 @@ class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = Profile
 		fields = ('name', 'nim')
+
+class SelfUserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ('email','password', 'username')
