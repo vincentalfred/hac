@@ -19,7 +19,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
-		context['unregistered_cards_list'] = Unregistered_card.objects.all()
+		context['unregistered_cards_list'] = Unregistered_card.objects.all().order_by('-tap_time')
 		return context
 
 @login_required

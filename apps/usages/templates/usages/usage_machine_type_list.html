@@ -51,7 +51,7 @@ var timeSeries = [{
 	name: '{{ machine_type.machine_type_name }}',
 	data: [
 	{% for curdate, data in timeData.items %}
-		{{ data }},
+		{{ data|floatformat }},
 	{% endfor %}
 	],
 }];
@@ -60,7 +60,7 @@ var energySeries = [{
 	name: '{{ machine_type.machine_type_name }}',
 	data: [
 	{% for curdate, data in energyData.items %}
-		{{ data }},
+		{{ data|floatformat }},
 	{% endfor %}
 	],
 }];
