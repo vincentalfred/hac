@@ -103,7 +103,7 @@ class UserView(LoginRequiredMixin, View):
 		for machine_type in machine_types:
 			usages = Usage.objects.filter(user=profile.user, machine_type=machine_type, start_time__range=[start_time, end_time])
 			for usage in usages:
-				timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+				timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 				energyData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
 		usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range=[start_time , end_time]))
@@ -144,7 +144,7 @@ class UserView(LoginRequiredMixin, View):
 			for machine_type in machine_types:
 				usages = Usage.objects.filter(user=profile.user, machine_type=machine_type, start_time__range=[start_time, end_time])
 				for usage in usages:
-					timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+					timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 					energyData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
 			usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range = [start_time , end_time]))
@@ -178,7 +178,7 @@ class MachineView(LoginRequiredMixin, View):
 
 		usages = Usage.objects.filter(machine=machine, start_time__range=[start_time, end_time])
 		for usage in usages:
-			timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+			timeData[usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 			energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
 		usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]))
@@ -212,7 +212,7 @@ class MachineView(LoginRequiredMixin, View):
 
 			usages = Usage.objects.filter(machine=machine, start_time__range=[start_time, end_time])
 			for usage in usages:
-				timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+				timeData[usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 				energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 			
 			usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]))
@@ -245,7 +245,7 @@ class MachineTypeView(LoginRequiredMixin, View):
 
 		usages = Usage.objects.filter(machine_type=machine_type, start_time__range=[start_time, end_time])
 		for usage in usages:
-			timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+			timeData[usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 			energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
 		usage_table = UsageTable(Usage.objects.filter(machine_type=machine_type, start_time__range=[start_time , end_time]))
@@ -279,7 +279,7 @@ class MachineTypeView(LoginRequiredMixin, View):
 
 			usages = Usage.objects.filter(machine_type=machine_type, start_time__range=[start_time, end_time])
 			for usage in usages:
-				timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
+				timeData[usage.start_time.strftime("%d/%m/%y")] += round(((usage.end_time-usage.start_time).seconds/60), 1)
 				energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 			
 			usage_table = UsageTable(Usage.objects.filter(machine_type = self.kwargs["machine_type_id"], start_time__range = [start_time , end_time]))
