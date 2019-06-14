@@ -4,9 +4,9 @@ from apps.machines.models import Machine_type, Machine
 from apps.cards.models import Card
 
 class Usage (models.Model):
-	user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-	machine_type = models.ForeignKey(Machine_type, on_delete=models.DO_NOTHING)
-	machine = models.ForeignKey(Machine, on_delete=models.DO_NOTHING)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	machine_type = models.ForeignKey(Machine_type, on_delete=models.CASCADE)
+	machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
 	start_time = models.DateTimeField()
 	end_time = models.DateTimeField()
 	total_usage = models.IntegerField()
