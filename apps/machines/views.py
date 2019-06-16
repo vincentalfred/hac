@@ -9,11 +9,11 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 	context_object_name = 'machine_list'
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
-		context['machine_type_list'] = Machine_type.objects.all()
+		context['machine_type_list'] = Machine_type.objects.all().order_by('id')
 		return context
 
 	def get_queryset(self):
-		return Machine.objects.all()
+		return Machine.objects.all().order_by('id')
 
 
 class MachineDetail(LoginRequiredMixin, generic.DetailView):

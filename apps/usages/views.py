@@ -35,7 +35,7 @@ def DetailView(request):
 				end_time = form.cleaned_data['end_date_field']
 				end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
 				dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
-				usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]))
+				usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]).order_by('-id'))
 				RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 				machine_type_list = Machine_type.objects.all()
 				
@@ -43,7 +43,7 @@ def DetailView(request):
 			form = DatePickerForm()
 			start_time = (timezone.now() + timezone.timedelta(days=-7)).replace(hour=0, minute=0, second=0, microsecond=0)
 			end_time = timezone.now()
-			usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]))
+			usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]).order_by('-id'))
 			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 			machine_type_list = Machine_type.objects.all()
 			dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
@@ -62,7 +62,7 @@ def DetailView(request):
 				start_time = form.cleaned_data['start_date_field'].replace(hour=0, minute=0, second=0, microsecond=0)
 				end_time = form.cleaned_data['end_date_field']
 				end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
-				dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time]).order_by()
+				dailyUsage_list = DailyUsage.objects.filter(date__range = [start_time , end_time])
 				machine_type_list = Machine_type.objects.all()
 		else:
 			form = DatePickerForm()
@@ -76,6 +76,103 @@ def DetailView(request):
 			'dailyUsage_list': dailyUsage_list,
 			'form': form,
 		})
+
+class DetailView2(View):
+	def get(self, request, *args, **kwargs):
+		form = DatePickerForm()
+		start_time = (timezone.now() + timezone.timedelta(days=-7)).replace(hour=0, minute=0, second=0, microsecond=0)
+		end_time = timezone.now()
+
+		timeData = {}
+		energyData = {}
+		machine_types = Machine_type.objects.all()
+		for machine_type in machine_types:
+			timeData[machine_type.machine_type_name] = {}
+			energyData[machine_type.machine_type_name] = {}
+		dateList = []
+		cur_date = start_time
+		while cur_date < end_time:
+			dateList.append(cur_date)
+			for machine_type in machine_types:
+				timeData[machine_type.machine_type_name][cur_date.strftime("%d/%m/%y")] = 0
+				energyData[machine_type.machine_type_name][cur_date.strftime("%d/%m/%y")] = 0
+			cur_date += timezone.timedelta(days=1)
+		dateList.append(cur_date)
+
+		for machine_type in machine_types:
+			usages = DailyUsage.objects.filter(machine_type=machine_type, date__range=[start_time, end_time])
+			for usage in usages:
+				timeData[machine_type.machine_type_name][usage.date.strftime("%d/%m/%y")] += usage.total_time
+				energyData[machine_type.machine_type_name][usage.date.strftime("%d/%m/%y")] += usage.total_usage
+
+		if request.user.is_authenticated:
+			usage_table = UsageTable(Usage.objects.filter(start_time__range=[start_time , end_time]).order_by('-id'))
+			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
+			return render(request, 'usages/usage_list_2.html', {
+				'usage_table': usage_table,
+				'machine_type_list': machine_types,
+				'form': form,
+				'dateList': dateList,
+				'timeData': timeData,
+				'energyData': energyData,
+			})
+		else:
+			return render(request, 'usages/usage_list_2_nonadmin.html', {
+				'machine_type_list': machine_types,
+				'form': form,
+				'dateList': dateList,
+				'timeData': timeData,
+				'energyData': energyData,
+			})
+
+	def post(self, request, *args, **kwargs):
+		form = DatePickerForm(request.POST)
+		if form.is_valid():
+			start_time = form.cleaned_data['start_date_field'].replace(hour=0, minute=0, second=0, microsecond=0)
+			end_time = form.cleaned_data['end_date_field']
+			end_time = end_time+timezone.timedelta(hours = 23, minutes = 59)
+
+			timeData = {}
+			energyData = {}
+			machine_types = Machine_type.objects.all()
+			for machine_type in machine_types:
+				timeData[machine_type.machine_type_name] = {}
+				energyData[machine_type.machine_type_name] = {}
+			dateList = []
+			cur_date = start_time
+			while cur_date < end_time:
+				dateList.append(cur_date)
+				for machine_type in machine_types:
+					timeData[machine_type.machine_type_name][cur_date.strftime("%d/%m/%y")] = 0
+					energyData[machine_type.machine_type_name][cur_date.strftime("%d/%m/%y")] = 0
+				cur_date += timezone.timedelta(days=1)
+			dateList.append(cur_date)
+
+			for machine_type in machine_types:
+				usages = DailyUsage.objects.filter(machine_type=machine_type, date__range=[start_time, end_time])
+				for usage in usages:
+					timeData[machine_type.machine_type_name][usage.date.strftime("%d/%m/%y")] += usage.total_time
+					energyData[machine_type.machine_type_name][usage.date.strftime("%d/%m/%y")] += usage.total_usage
+
+			if request.user.is_authenticated:
+				usage_table = UsageTable(Usage.objects.filter(start_time__range = [start_time , end_time]).order_by('-id'))
+				RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
+				return render(request, 'usages/usage_list_2.html', {
+					'usage_table': usage_table,
+					'machine_type_list': machine_types,
+					'form': form,
+					'dateList': dateList,
+					'timeData': timeData,
+					'energyData': energyData,
+				})
+			else:
+				return render(request, 'usages/usage_list_2_nonadmin.html', {
+					'machine_type_list': machine_types,
+					'form': form,
+					'dateList': dateList,
+					'timeData': timeData,
+					'energyData': energyData,
+				})
 
 class UserView(LoginRequiredMixin, View):
 	def get(self, request, *args, **kwargs):
@@ -106,7 +203,8 @@ class UserView(LoginRequiredMixin, View):
 				timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 				energyData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
-		usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range=[start_time , end_time]))
+		usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range=[start_time , end_time]).order_by('-id'))
+		RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 		return render(request, 'usages/usage_user_list.html', {
 			'usage_table': usage_table,
 			'machine_type_list': machine_types,
@@ -147,7 +245,8 @@ class UserView(LoginRequiredMixin, View):
 					timeData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 					energyData[machine_type.machine_type_name][usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
-			usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range = [start_time , end_time]))
+			usage_table = UsageTable(Usage.objects.filter(user=profile.user, start_time__range = [start_time , end_time]).order_by('-id'))
+			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 			return render(request, 'usages/usage_user_list.html', {
 				'usage_table': usage_table,
 				'machine_type_list': machine_types,
@@ -181,7 +280,8 @@ class MachineView(LoginRequiredMixin, View):
 			timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 			energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
-		usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]))
+		usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]).order_by('-id'))
+		RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 		return render(request, 'usages/usage_machine_list.html', {
 			'usage_table': usage_table,
 			'form': form,
@@ -215,7 +315,8 @@ class MachineView(LoginRequiredMixin, View):
 				timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 				energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 			
-			usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]))
+			usage_table = UsageTable(Usage.objects.filter(machine=machine, start_time__range=[start_time , end_time]).order_by('-id'))
+			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 			return render(request, 'usages/usage_machine_list.html', {
 				'usage_table': usage_table,
 				'form': form,
@@ -248,7 +349,8 @@ class MachineTypeView(LoginRequiredMixin, View):
 			timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 			energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 
-		usage_table = UsageTable(Usage.objects.filter(machine_type=machine_type, start_time__range=[start_time , end_time]))
+		usage_table = UsageTable(Usage.objects.filter(machine_type=machine_type, start_time__range=[start_time , end_time]).order_by('-id'))
+		RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 		return render(request, 'usages/usage_machine_type_list.html', {
 			'usage_table': usage_table,
 			'form': form,
@@ -282,7 +384,8 @@ class MachineTypeView(LoginRequiredMixin, View):
 				timeData[usage.start_time.strftime("%d/%m/%y")] += ((usage.end_time-usage.start_time).seconds/60)
 				energyData[usage.start_time.strftime("%d/%m/%y")] += usage.total_usage
 			
-			usage_table = UsageTable(Usage.objects.filter(machine_type = self.kwargs["machine_type_id"], start_time__range = [start_time , end_time]))
+			usage_table = UsageTable(Usage.objects.filter(machine_type = self.kwargs["machine_type_id"], start_time__range = [start_time , end_time]).order_by('-id'))
+			RequestConfig(request, paginate={'per_page': 10}).configure(usage_table)
 			return render(request, 'usages/usage_machine_type_list.html', {
 				'usage_table': usage_table,
 				'form': form,

@@ -86,7 +86,7 @@ var prevDate = new Date(0);
 	}
 	var lastIdx = energyPerType['{{ dailyUsage.machine_type }}'].length - 1;
 	energyPerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_usage }};
-	timePerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_time }}/60;
+	timePerType['{{ dailyUsage.machine_type }}'][lastIdx] = {{ dailyUsage.total_time }};
 {% endfor %}
 
 var dataTime = {

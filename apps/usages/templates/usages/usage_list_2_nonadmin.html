@@ -1,0 +1,157 @@
+{% extends 'usages/base.html' %}
+
+{% block content %}
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Usages</h5>
+			<div id="usageChart"></div>
+		</div>
+	</div>
+{% endblock content %}
+
+{% block sidebar %}
+	<div class="card mb-5">
+		<div class="card-body">
+			<h5 class="card-title">Chart Type</h5>
+			<div class="radio">
+				<label><input id="timeChartRadio" type="radio" name="chartRadio" value="time"checked>Time Usage</label>
+			</div>
+			<div class="radio">
+				<label><input id="energyChartRadio" type="radio" name="chartRadio" value="energy">Energy Usage</label>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Date Picker</h5>
+			{{ form.media }}
+			<form method="post" action=".">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button class="btn btn-hac" type="submit">View</button>
+			</form>
+		</div>
+	</div>
+{% endblock sidebar %}
+
+{% block javascript %}
+
+var dataType="time";
+var colors = ['#1456c9', '#ffc119', '#15a344', '#000000'];
+
+var dateList = [
+{% for curDate in dateList %}
+	'{{ curDate|date:'j M y' }}',
+{% endfor %}
+];
+
+var timeSeries = [
+{% for machine_type, data in timeData.items %}
+	{
+		name: '{{ machine_type }}',
+		data: [
+			{% for curdate, value in data.items %}
+				{{ value|floatformat }},
+			{% endfor %}
+		],
+	},
+{% endfor %}
+];
+
+var energySeries = [
+{% for machine_type, data in energyData.items %}
+	{
+		name: '{{ machine_type }}',
+		data: [
+			{% for curdate, value in data.items %}
+				{{ value|floatformat }},
+			{% endfor %}
+		],
+	},
+{% endfor %}
+];
+
+var options = {
+				chart: {
+					height: 350,
+					type: 'bar',
+					stacked: true,
+					toolbar: {
+						show: true
+					},
+					zoom: {
+						enabled: true
+					}
+				},
+				responsive: [{
+					breakpoint: 480,
+					options: {
+						legend: {
+							position: 'bottom',
+							offsetX: -10,
+							offsetY: 0
+						}
+					}
+				}],
+				plotOptions: {
+					bar: {
+						horizontal: false,
+					},
+				},
+				colors: colors,
+				series: timeSeries,
+				xaxis: {
+					type: 'datetime',
+					categories: dateList,
+				},
+				yaxis: {
+					title: {
+						text: 'Time (Minutes)',
+					},
+				},
+				legend: {
+					position: 'right',
+					offsetY: 40
+				},
+				fill: {
+					opacity: 1
+				},
+			}
+
+var chart = new ApexCharts(
+			document.querySelector("#usageChart"),
+			options
+		);
+
+$(document).ready(function(){
+	$('#timeChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			chart.updateOptions({
+				yaxis: {
+					title: {
+						text: 'Time (Minutes)',
+					},
+				}
+			});
+			chart.updateSeries(timeSeries);
+		}
+	});
+	$('#energyChartRadio').on('change', function() {
+		if (this.value !== dataType) {
+			dataType = this.value;
+			chart.updateOptions({
+				yaxis: {
+					title: {
+						text: 'Energy (Wh)',
+					},
+				}
+			});
+			chart.updateSeries(energySeries);
+		}
+	});
+		
+	chart.render();
+});
+
+{% endblock javascript %}
